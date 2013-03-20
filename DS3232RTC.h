@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------*
- * DS3232RTC.h - Arduino library for the Maxim Integrated DS3232    	*
+ * DS3232RTC.h - Arduino library for the Maxim Integrated DS3232        *
  * Real-Time Clock. This library is intended for use with the Arduino   *
  * Time.h library, http://www.arduino.cc/playground/Code/Time           *
  *                                                                      *
@@ -11,17 +11,17 @@
  *                                                                      *
  * In addition, this library implements functions to support the        *
  * additional features of the DS3232.                                   *
- *																		*
- * This library will also work with the DS3231 RTC, which has the same	*
+ *                                                                      *
+ * This library will also work with the DS3231 RTC, which has the same  *
  * features of the DS3232 except: (1) Battery-backed SRAM, (2) Battery- *
- * backed 32kHz output (BB32kHz bit in Control/Status register 0x0F),	*
- * and (3) Adjustable temperature sensor sample rate (CRATE1:0 bits in	*
- * the Control/Status register).										*
- *																		*
- * Whether used with the DS3232 or DS3231, the user is responsible for	*
- * ensuring reads and writes do not exceed the device's address space	*
- * (0x00-0x12 for DS3231, 0x00-0xFF for DS3232); no checking is done	*
- * by this library.														*
+ * backed 32kHz output (BB32kHz bit in Control/Status register 0x0F),   *
+ * and (3) Adjustable temperature sensor sample rate (CRATE1:0 bits in  *
+ * the Control/Status register).                                        *
+ *                                                                      *
+ * Whether used with the DS3232 or DS3231, the user is responsible for  *
+ * ensuring reads and writes do not exceed the device's address space   *
+ * (0x00-0x12 for DS3231, 0x00-0xFF for DS3232); no checking is done    *
+ * by this library.                                                     *
  *                                                                      *
  * Jack Christensen 06Mar2013                                           *
  *                                                                      *
