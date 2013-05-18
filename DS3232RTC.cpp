@@ -100,7 +100,7 @@ void DS3232RTC::write(tmElements_t &tm)
 {
     Wire.beginTransmission(RTC_ADDR);
     i2cWrite((uint8_t)RTC_SECONDS);
-    i2cWrite((uint8_t)tm.Second);
+    i2cWrite(dec2bcd(tm.Second));
     i2cWrite(dec2bcd(tm.Minute));
     i2cWrite(dec2bcd(tm.Hour));                  //sets 24 hour format (Bit 6 == 0)
     i2cWrite(tm.Wday);
