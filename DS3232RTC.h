@@ -20,8 +20,8 @@
  *                                                                      *
  * Whether used with the DS3232 or DS3231, the user is responsible for  *
  * ensuring reads and writes do not exceed the device's address space   *
- * (0x00-0x12 for DS3231, 0x00-0xFF for DS3232); no checking is done    *
- * by this library.                                                     *
+ * (0x00-0x12 for DS3231, 0x00-0xFF for DS3232); no bounds checking     *
+ * is done by this library.                                             *
  *                                                                      *
  * Jack Christensen 06Mar2013                                           *
  *                                                                      *
