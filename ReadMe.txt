@@ -45,8 +45,11 @@ To use the library:
 --------------------------------------------------------------------------------
 The following example sketches are included with the DS3232RTC library:
 
-SetSerial -- Set the RTC from the Arduino serial monitor. Display date,
+SetSerial: Set the RTC from the Arduino serial monitor. Display date,
 time and temperature.
+
+tiny3232_KnockBang: Demonstrates interfacing an ATtiny45/85 to a
+DS3231 or DS3232 RTC.
 
 --------------------------------------------------------------------------------
 Similar to the DS1307RTC library, the DS3232RTC library instantiates an RTC

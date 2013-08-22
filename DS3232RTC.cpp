@@ -33,6 +33,7 @@
  *----------------------------------------------------------------------*/ 
 
 #include <Wire.h>
+#include <TinyWireM.h>
 #include <DS3232RTC.h>
 
 /*----------------------------------------------------------------------*
@@ -40,7 +41,7 @@
  *----------------------------------------------------------------------*/
 DS3232RTC::DS3232RTC()
 {
-    Wire.begin();
+    i2cBegin();
 }
   
 /*----------------------------------------------------------------------*
@@ -74,14 +75,14 @@ void DS3232RTC::set(time_t t)
  *----------------------------------------------------------------------*/
 boolean DS3232RTC::read(tmElements_t &tm)
 {
-    Wire.beginTransmission(RTC_ADDR);
+    i2cBeginTransmission(RTC_ADDR);
     i2cWrite((uint8_t)RTC_SECONDS);
-    if (Wire.endTransmission() != 0) {
+    if (i2cEndTransmission() != 0) {
         return false;
     }
     else {
         //request 7 bytes (secs, min, hr, dow, date, mth, yr)
-        Wire.requestFrom(RTC_ADDR, tmNbrFields);
+        i2cRequestFrom(RTC_ADDR, tmNbrFields);
         tm.Second = bcd2dec(i2cRead() & ~_BV(DS1307_CH));   
         tm.Minute = bcd2dec(i2cRead());
         tm.Hour = bcd2dec(i2cRead() & ~_BV(HR1224));    //assumes 24hr clock
@@ -98,7 +99,7 @@ boolean DS3232RTC::read(tmElements_t &tm)
  *----------------------------------------------------------------------*/
 void DS3232RTC::write(tmElements_t &tm)
 {
-    Wire.beginTransmission(RTC_ADDR);
+    i2cBeginTransmission(RTC_ADDR);
     i2cWrite((uint8_t)RTC_SECONDS);
     i2cWrite(dec2bcd(tm.Second));
     i2cWrite(dec2bcd(tm.Minute));
@@ -107,7 +108,7 @@ void DS3232RTC::write(tmElements_t &tm)
     i2cWrite(dec2bcd(tm.Day));
     i2cWrite(dec2bcd(tm.Month));
     i2cWrite(dec2bcd(tmYearToY2k(tm.Year))); 
-    Wire.endTransmission();  
+    i2cEndTransmission();  
 }
 
 /*----------------------------------------------------------------------*
@@ -118,10 +119,10 @@ void DS3232RTC::write(tmElements_t &tm)
  *----------------------------------------------------------------------*/
 void DS3232RTC::writeRTC(byte addr, byte *values, byte nBytes)
 {
-    Wire.beginTransmission(RTC_ADDR);
+    i2cBeginTransmission(RTC_ADDR);
     i2cWrite(addr);
     for (byte i=0; i<nBytes; i++) i2cWrite(values[i]);
-    Wire.endTransmission();  
+    i2cEndTransmission();  
 }
 
 /*----------------------------------------------------------------------*
@@ -141,10 +142,10 @@ void DS3232RTC::writeRTC(byte addr, byte value)
  *----------------------------------------------------------------------*/
 void DS3232RTC::readRTC(byte addr, byte *values, byte nBytes)
 {
-    Wire.beginTransmission(RTC_ADDR);
+    i2cBeginTransmission(RTC_ADDR);
     i2cWrite(addr);
-    Wire.endTransmission();  
-    Wire.requestFrom( (uint8_t)RTC_ADDR, nBytes );
+    i2cEndTransmission();  
+    i2cRequestFrom( (uint8_t)RTC_ADDR, nBytes );
     for (byte i=0; i<nBytes; i++) values[i] = i2cRead();
 }
 
