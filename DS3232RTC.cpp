@@ -24,6 +24,9 @@
  * is done by this library.                                             *
  *                                                                      *
  * Jack Christensen 06Mar2013                                           *
+ * 26Aug2013 Added lastError() method to return the status of the last  *
+ *           I2C communication with the RTC. Thanks to Rob Tillaart     *
+ *           for the suggestion.                                        *
  *                                                                      *
  * This work is licensed under the Creative Commons Attribution-        *
  * ShareAlike 3.0 Unported License. To view a copy of this license,     *
@@ -46,7 +49,8 @@ DS3232RTC::DS3232RTC()
   
 /*----------------------------------------------------------------------*
  * Read the current time from the RTC and return it as a time_t value.  *
- * Returns a zero value if RTC not present (I2C I/O error).             *
+ * Returns a zero value if an I2C error occurred (e.g. RTC              *
+ * not present).                                                        *
  *----------------------------------------------------------------------*/
 time_t DS3232RTC::get()
 {
@@ -71,13 +75,14 @@ void DS3232RTC::set(time_t t)
 
 /*----------------------------------------------------------------------*
  * Read the current time from the RTC and return it in a tmElements_t   *
- * structure. Returns false if RTC not present (I2C I/O error).         *
+ * structure. Returns false if an I2C error occurred (e.g. RTC          *
+ * not present).                                                        *
  *----------------------------------------------------------------------*/
 boolean DS3232RTC::read(tmElements_t &tm)
 {
     i2cBeginTransmission(RTC_ADDR);
     i2cWrite((uint8_t)RTC_SECONDS);
-    if (i2cEndTransmission() != 0) {
+    if ( (_errorValue = i2cEndTransmission()) ) {
         return false;
     }
     else {
@@ -108,7 +113,20 @@ void DS3232RTC::write(tmElements_t &tm)
     i2cWrite(dec2bcd(tm.Day));
     i2cWrite(dec2bcd(tm.Month));
     i2cWrite(dec2bcd(tmYearToY2k(tm.Year))); 
-    i2cEndTransmission();  
+    _errorValue = i2cEndTransmission();  
+}
+
+/*----------------------------------------------------------------------*
+ * Return the status from the last I2C communication with the RTC.      *
+ * Note that error values are different between the Wire library        *
+ * and the TinyWireM library, but that zero means success for either.   *
+ * Note that the error value is cleared after it is returned.           *
+ *----------------------------------------------------------------------*/
+uint8_t DS3232RTC::lastError(void)
+{
+    uint8_t e = _errorValue;
+    _errorValue = 0;
+    return e;
 }
 
 /*----------------------------------------------------------------------*
@@ -122,7 +140,7 @@ void DS3232RTC::writeRTC(byte addr, byte *values, byte nBytes)
     i2cBeginTransmission(RTC_ADDR);
     i2cWrite(addr);
     for (byte i=0; i<nBytes; i++) i2cWrite(values[i]);
-    i2cEndTransmission();  
+    _errorValue = i2cEndTransmission();  
 }
 
 /*----------------------------------------------------------------------*
@@ -144,9 +162,10 @@ void DS3232RTC::readRTC(byte addr, byte *values, byte nBytes)
 {
     i2cBeginTransmission(RTC_ADDR);
     i2cWrite(addr);
-    i2cEndTransmission();  
-    i2cRequestFrom( (uint8_t)RTC_ADDR, nBytes );
-    for (byte i=0; i<nBytes; i++) values[i] = i2cRead();
+    if ( !(_errorValue = i2cEndTransmission()) ) {
+        i2cRequestFrom( (uint8_t)RTC_ADDR, nBytes );
+        for (byte i=0; i<nBytes; i++) values[i] = i2cRead();
+    }
 }
 
 /*----------------------------------------------------------------------*
@@ -303,4 +322,5 @@ uint8_t DS3232RTC::bcd2dec(uint8_t n)
     return ((n / 16 * 10) + (n % 16));
 }
 
-DS3232RTC RTC = DS3232RTC();    //instantiate an RTC object
+uint8_t DS3232RTC::_errorValue = 0;     //last status returned from I2C tx
+DS3232RTC RTC = DS3232RTC();            //instantiate an RTC object
