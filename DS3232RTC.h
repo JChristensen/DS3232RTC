@@ -156,13 +156,13 @@ class DS3232RTC
     public:
         DS3232RTC();
         static time_t get(void);
-        static void set(time_t t);
+        static boolean set(time_t t);
         static boolean read(tmElements_t &tm);
-        static void write(tmElements_t &tm);
+        static boolean write(tmElements_t &tm);
         static uint8_t lastError();
-        void writeRTC(byte addr, byte *values, byte nBytes);
-        void writeRTC(byte addr, byte value);
-        void readRTC(byte addr, byte *values, byte nBytes);
+        boolean writeRTC(byte addr, byte *values, byte nBytes);
+        boolean writeRTC(byte addr, byte value);
+        boolean readRTC(byte addr, byte *values, byte nBytes);
         byte readRTC(byte addr);
         void setAlarm(byte alarmType, byte seconds, byte minutes, byte hours, byte daydate);
         void setAlarm(byte alarmType, byte minutes, byte hours, byte daydate);

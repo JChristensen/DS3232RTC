@@ -64,45 +64,43 @@ time_t DS3232RTC::get()
 
 /*----------------------------------------------------------------------*
  * Set the RTC to the given time_t value.                               *
+ * Returns true if successful, false if an I2C error occurred.          *
  *----------------------------------------------------------------------*/
-void DS3232RTC::set(time_t t)
+boolean DS3232RTC::set(time_t t)
 {
     tmElements_t tm;
 
     breakTime(t, tm);
-    write(tm); 
+    return ( write(tm) );
 }
 
 /*----------------------------------------------------------------------*
  * Read the current time from the RTC and return it in a tmElements_t   *
- * structure. Returns false if an I2C error occurred (e.g. RTC          *
- * not present).                                                        *
+ * structure.                                                           *
+ * Returns true if successful, false if an I2C error occurred.          *
  *----------------------------------------------------------------------*/
 boolean DS3232RTC::read(tmElements_t &tm)
 {
     i2cBeginTransmission(RTC_ADDR);
     i2cWrite((uint8_t)RTC_SECONDS);
-    if ( (_errorValue = i2cEndTransmission()) ) {
-        return false;
-    }
-    else {
-        //request 7 bytes (secs, min, hr, dow, date, mth, yr)
-        i2cRequestFrom(RTC_ADDR, tmNbrFields);
-        tm.Second = bcd2dec(i2cRead() & ~_BV(DS1307_CH));   
-        tm.Minute = bcd2dec(i2cRead());
-        tm.Hour = bcd2dec(i2cRead() & ~_BV(HR1224));    //assumes 24hr clock
-        tm.Wday = i2cRead();
-        tm.Day = bcd2dec(i2cRead());
-        tm.Month = bcd2dec(i2cRead() & ~_BV(CENTURY));  //don't use the Century bit
-        tm.Year = y2kYearToTm(bcd2dec(i2cRead()));
-        return true;
-    }
+    if ( _errorValue = i2cEndTransmission() ) return false;
+    //request 7 bytes (secs, min, hr, dow, date, mth, yr)
+    i2cRequestFrom(RTC_ADDR, tmNbrFields);
+    tm.Second = bcd2dec(i2cRead() & ~_BV(DS1307_CH));   
+    tm.Minute = bcd2dec(i2cRead());
+    tm.Hour = bcd2dec(i2cRead() & ~_BV(HR1224));    //assumes 24hr clock
+    tm.Wday = i2cRead();
+    tm.Day = bcd2dec(i2cRead());
+    tm.Month = bcd2dec(i2cRead() & ~_BV(CENTURY));  //don't use the Century bit
+    tm.Year = y2kYearToTm(bcd2dec(i2cRead()));
+    return true;
 }
 
 /*----------------------------------------------------------------------*
  * Set the RTC's time from a tmElements_t structure.                    *
+ * Returns true if successful, false if an I2C error occurred.          *
  *----------------------------------------------------------------------*/
-void DS3232RTC::write(tmElements_t &tm)
+boolean DS3232RTC::write(tmElements_t &tm)
 {
     i2cBeginTransmission(RTC_ADDR);
     i2cWrite((uint8_t)RTC_SECONDS);
@@ -113,7 +111,8 @@ void DS3232RTC::write(tmElements_t &tm)
     i2cWrite(dec2bcd(tm.Day));
     i2cWrite(dec2bcd(tm.Month));
     i2cWrite(dec2bcd(tmYearToY2k(tm.Year))); 
-    _errorValue = i2cEndTransmission();  
+    if ( _errorValue = i2cEndTransmission() ) return false;
+    return true;
 }
 
 /*----------------------------------------------------------------------*
@@ -134,22 +133,25 @@ uint8_t DS3232RTC::lastError(void)
  * Valid address range is 0x00 - 0xFF, no checking.                     *
  * Number of bytes (nBytes) must be between 1 and 31 (Wire library      *
  * limitation).                                                         *
+ * Returns true if successful, false if an I2C error occurred.          *
  *----------------------------------------------------------------------*/
-void DS3232RTC::writeRTC(byte addr, byte *values, byte nBytes)
+boolean DS3232RTC::writeRTC(byte addr, byte *values, byte nBytes)
 {
     i2cBeginTransmission(RTC_ADDR);
     i2cWrite(addr);
     for (byte i=0; i<nBytes; i++) i2cWrite(values[i]);
-    _errorValue = i2cEndTransmission();  
+    if ( _errorValue = i2cEndTransmission() ) return false;
+    return true;
 }
 
 /*----------------------------------------------------------------------*
  * Write a single byte to RTC RAM.                                      *
  * Valid address range is 0x00 - 0x5F, no checking.                     *
+ * Returns true if successful, false if an I2C error occurred.          *
  *----------------------------------------------------------------------*/
-void DS3232RTC::writeRTC(byte addr, byte value)
+boolean DS3232RTC::writeRTC(byte addr, byte value)
 {
-    writeRTC(addr, &value, 1);
+    return ( writeRTC(addr, &value, 1) );
 }
 
 /*----------------------------------------------------------------------*
@@ -157,15 +159,16 @@ void DS3232RTC::writeRTC(byte addr, byte value)
  * Valid address range is 0x00 - 0xFF, no checking.                     *
  * Number of bytes (nBytes) must be between 1 and 32 (Wire library      *
  * limitation).                                                         *
+ * Returns true if successful, false if an I2C error occurred.          *
  *----------------------------------------------------------------------*/
-void DS3232RTC::readRTC(byte addr, byte *values, byte nBytes)
+boolean DS3232RTC::readRTC(byte addr, byte *values, byte nBytes)
 {
     i2cBeginTransmission(RTC_ADDR);
     i2cWrite(addr);
-    if ( !(_errorValue = i2cEndTransmission()) ) {
-        i2cRequestFrom( (uint8_t)RTC_ADDR, nBytes );
-        for (byte i=0; i<nBytes; i++) values[i] = i2cRead();
-    }
+    if (_errorValue = i2cEndTransmission()) return false;
+    i2cRequestFrom( (uint8_t)RTC_ADDR, nBytes );
+    for (byte i=0; i<nBytes; i++) values[i] = i2cRead();
+    return true;
 }
 
 /*----------------------------------------------------------------------*
