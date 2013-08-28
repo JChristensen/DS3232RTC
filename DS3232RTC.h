@@ -24,7 +24,7 @@
  * is done by this library.                                             *
  *                                                                      *
  * Jack Christensen 06Mar2013                                           *
- * 26Aug2013 Added lastError() method to return the status of the last  *
+ * 28Aug2013 Changed the lower level methods return the status of the   *
  *           I2C communication with the RTC. Thanks to Rob Tillaart     *
  *           for the suggestion.                                        *
  *                                                                      *
@@ -156,13 +156,12 @@ class DS3232RTC
     public:
         DS3232RTC();
         static time_t get(void);
-        static boolean set(time_t t);
-        static boolean read(tmElements_t &tm);
-        static boolean write(tmElements_t &tm);
-        static uint8_t lastError();
-        boolean writeRTC(byte addr, byte *values, byte nBytes);
-        boolean writeRTC(byte addr, byte value);
-        boolean readRTC(byte addr, byte *values, byte nBytes);
+        static byte set(time_t t);
+        static byte read(tmElements_t &tm);
+        static byte write(tmElements_t &tm);
+        byte writeRTC(byte addr, byte *values, byte nBytes);
+        byte writeRTC(byte addr, byte value);
+        byte readRTC(byte addr, byte *values, byte nBytes);
         byte readRTC(byte addr);
         void setAlarm(byte alarmType, byte seconds, byte minutes, byte hours, byte daydate);
         void setAlarm(byte alarmType, byte minutes, byte hours, byte daydate);
@@ -173,7 +172,6 @@ class DS3232RTC
         int temperature(void);
 
     private:
-        static uint8_t _errorValue;    //last status returned from I2C tx
         static uint8_t dec2bcd(uint8_t n);
         static uint8_t bcd2dec(uint8_t n);
 };
