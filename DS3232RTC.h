@@ -163,11 +163,11 @@ class DS3232RTC
         byte writeRTC(byte addr, byte value);
         byte readRTC(byte addr, byte *values, byte nBytes);
         byte readRTC(byte addr);
-        void setAlarm(byte alarmType, byte seconds, byte minutes, byte hours, byte daydate);
-        void setAlarm(byte alarmType, byte minutes, byte hours, byte daydate);
+        void setAlarm(ALARM_TYPES_t alarmType, byte seconds, byte minutes, byte hours, byte daydate);
+        void setAlarm(ALARM_TYPES_t alarmType, byte minutes, byte hours, byte daydate);
         void alarmInterrupt(byte alarmNumber, boolean alarmEnabled);
         boolean alarm(byte alarmNumber);
-        void squareWave(byte freq);
+        void squareWave(SQWAVE_FREQS_t freq);
         boolean oscStopped(void);
         int temperature(void);
 

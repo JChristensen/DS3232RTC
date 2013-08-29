@@ -173,7 +173,7 @@ byte DS3232RTC::readRTC(byte addr)
  * When setting Alarm 2, the seconds value must be supplied but is      *
  * ignored, recommend using zero. (Alarm 2 has no seconds register.)    *
  *----------------------------------------------------------------------*/
-void DS3232RTC::setAlarm(byte alarmType, byte seconds, byte minutes, byte hours, byte daydate)
+void DS3232RTC::setAlarm(ALARM_TYPES_t alarmType, byte seconds, byte minutes, byte hours, byte daydate)
 {
     uint8_t addr;
     
@@ -207,7 +207,7 @@ void DS3232RTC::setAlarm(byte alarmType, byte seconds, byte minutes, byte hours,
  * However, when using this method to set Alarm 1, the seconds value    *
  * is set to zero. (Alarm 2 has no seconds register.)                   *
  *----------------------------------------------------------------------*/
-void DS3232RTC::setAlarm(byte alarmType, byte minutes, byte hours, byte daydate)
+void DS3232RTC::setAlarm(ALARM_TYPES_t alarmType, byte minutes, byte hours, byte daydate)
 {
     setAlarm(alarmType, 0, minutes, hours, daydate);
 }
@@ -253,7 +253,7 @@ boolean DS3232RTC::alarm(byte alarmNumber)
  * Enable or disable the square wave output.                            *
  * Use a value from the SQWAVE_FREQS_t enumeration for the parameter.   *
  *----------------------------------------------------------------------*/
-void DS3232RTC::squareWave(byte freq)
+void DS3232RTC::squareWave(SQWAVE_FREQS_t freq)
 {
     uint8_t controlReg;
 
@@ -262,7 +262,7 @@ void DS3232RTC::squareWave(byte freq)
         controlReg |= _BV(INTCN);
     }
     else {
-        controlReg = (controlReg & 0xE3) & ~_BV(INTCN) | (freq  << RS1);
+        controlReg = (controlReg & 0xE3) | (freq << RS1);
     }
     writeRTC(RTC_CONTROL, controlReg);
 }
