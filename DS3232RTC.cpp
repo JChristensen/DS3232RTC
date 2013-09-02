@@ -296,15 +296,15 @@ int DS3232RTC::temperature(void)
  *----------------------------------------------------------------------*/
 uint8_t DS3232RTC::dec2bcd(uint8_t n)
 {
-    return ((n / 10 * 16) + (n % 10));
+    return n + 6 * (n / 10);
 }
 
 /*----------------------------------------------------------------------*
  * BCD-to-Decimal conversion                                            *
  *----------------------------------------------------------------------*/
-uint8_t DS3232RTC::bcd2dec(uint8_t n)
+uint8_t __attribute__ ((noinline)) DS3232RTC::bcd2dec(uint8_t n)
 {
-    return ((n / 16 * 10) + (n % 16));
+    return n - 6 * (n >> 4);
 }
 
 DS3232RTC RTC = DS3232RTC();            //instantiate an RTC object
