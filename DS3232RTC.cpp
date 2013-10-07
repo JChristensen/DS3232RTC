@@ -24,9 +24,9 @@
  * is done by this library.                                             *
  *                                                                      *
  * Jack Christensen 06Mar2013                                           *
- * 28Aug2013 Changed the lower level methods return the status of the   *
- *           I2C communication with the RTC. Thanks to Rob Tillaart     *
- *           for the suggestion. (Fixes issue #1.)                      *
+ * 28Aug2013 Changed the lower level methods to return the status of    *
+ *           the I2C communication with the RTC. Thanks to              *
+ *           Rob Tillaart for the suggestion. (Fixes issue #1.)         *
  *                                                                      *
  * This work is licensed under the Creative Commons Attribution-        *
  * ShareAlike 3.0 Unported License. To view a copy of this license,     *
