@@ -128,7 +128,7 @@ byte DS3232RTC::writeRTC(byte addr, byte *values, byte nBytes)
 
 /*----------------------------------------------------------------------*
  * Write a single byte to RTC RAM.                                      *
- * Valid address range is 0x00 - 0x5F, no checking.                     *
+ * Valid address range is 0x00 - 0xFF, no checking.                     *
  * Returns the I2C status (zero if successful).                         *
  *----------------------------------------------------------------------*/
 byte DS3232RTC::writeRTC(byte addr, byte value)

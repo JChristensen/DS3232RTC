@@ -74,7 +74,7 @@ void loop(void)
             tm.Minute = Serial.parseInt();
             tm.Second = Serial.parseInt();
             t = makeTime(tm);
-            RTC.write(tm);
+            RTC.set(t);        //use the time_t value to ensure correct weekday is set
             setTime(t);        
             Serial << F("RTC set to: ");
             printDateTime(t);
