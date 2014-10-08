@@ -1,0 +1,10 @@
+{
+  "name": "Arduino-DS3232RTC",
+  "keywords": "time, rtc",
+  "description": "Arduino Library for Maxim Integrated DS3232 and DS3231 Real-Time Clocks",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/JChristensen/DS3232RTC.git"
+  }
+}
