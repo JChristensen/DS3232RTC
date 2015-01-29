@@ -241,7 +241,7 @@ void DS3232RTC::setAlarm(ALARM_TYPES_t alarmType, byte minutes, byte hours, byte
  * Enable or disable an alarm "interrupt" which asserts the INT pin     *
  * on the RTC.                                                          *
  *----------------------------------------------------------------------*/
-void DS3232RTC::alarmInterrupt(byte alarmNumber, boolean interruptEnabled)
+void DS3232RTC::alarmInterrupt(byte alarmNumber, bool interruptEnabled)
 {
     uint8_t controlReg, mask;
     
@@ -258,7 +258,7 @@ void DS3232RTC::alarmInterrupt(byte alarmNumber, boolean interruptEnabled)
  * Returns true or false depending on whether the given alarm has been  *
  * triggered, and resets the alarm flag bit.                            *
  *----------------------------------------------------------------------*/
-boolean DS3232RTC::alarm(byte alarmNumber)
+bool DS3232RTC::alarm(byte alarmNumber)
 {
     uint8_t statusReg, mask;
     
@@ -296,9 +296,14 @@ void DS3232RTC::squareWave(SQWAVE_FREQS_t freq)
  * Checks the OSF bit in the status register which indicates that the   *
  * oscillator is or was stopped.                                        *
  *----------------------------------------------------------------------*/
-boolean DS3232RTC::oscStopped(void)
+bool DS3232RTC::oscStopped(bool clearOSF)
 {
-    return ( readRTC(RTC_STATUS) & _BV(OSF) );
+    uint8_t s = readRTC(RTC_STATUS);    //read the status register
+    bool ret = s & _BV(OSF);            //isolate the osc stop flag to return to caller
+    if (ret && clearOSF) {              //clear OSF if it's set and the caller wants to clear it
+        writeRTC( RTC_STATUS, s & ~_BV(OSF) );
+    }
+    return ret;
 }
 
 /*----------------------------------------------------------------------*
