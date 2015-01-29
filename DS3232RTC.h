@@ -9,6 +9,10 @@
  * only necessary to change the #include statement to include this      *
  * library instead of DS1307RTC.h.                                      *
  *                                                                      *
+ * This library is *not* a drop-in replacement for the newer version    *
+ * of the DS1307RTC library at                                          *
+ * http://www.pjrc.com/teensy/td_libs_DS1307RTC.html                    *
+ *                                                                      *
  * In addition, this library implements functions to support the        *
  * additional features of the DS3232.                                   *
  *                                                                      *
@@ -24,16 +28,10 @@
  * is done by this library.                                             *
  *                                                                      *
  * Jack Christensen 06Mar2013                                           *
- * 28Aug2013 Changed the lower level methods to return the status of    *
- *           the I2C communication with the RTC. Thanks to              *
- *           Rob Tillaart for the suggestion. (Fixes issue #1.)         *
  *                                                                      *
- * This work is licensed under the Creative Commons Attribution-        *
- * ShareAlike 3.0 Unported License. To view a copy of this license,     *
- * visit http://creativecommons.org/licenses/by-sa/3.0/ or send a       *
- * letter to Creative Commons, 444 Castro Street, Suite 900,            *
- * Mountain View, CA 94041.                                             *
- *----------------------------------------------------------------------*/ 
+ * CC BY-SA 4.0                                                         *
+ * "Arduino DS3232RTC Library" by Jack Christensen is licensed under    *
+ * CC BY-SA 4.0, http://creativecommons.org/licenses/by-sa/4.0/         * *----------------------------------------------------------------------*/ 
 
 #ifndef DS3232RTC_h
 #define DS3232RTC_h
@@ -131,10 +129,10 @@ class DS3232RTC
 {
     public:
         DS3232RTC();
-        static time_t get(void);
-        static byte set(time_t t);
+        static time_t get(void);    //must be static to work with setSyncProvider() in the Time library
+        byte set(time_t t);
         static byte read(tmElements_t &tm);
-        static byte write(tmElements_t &tm);
+        byte write(tmElements_t &tm);
         byte writeRTC(byte addr, byte *values, byte nBytes);
         byte writeRTC(byte addr, byte value);
         byte readRTC(byte addr, byte *values, byte nBytes);
@@ -148,7 +146,7 @@ class DS3232RTC
         int temperature(void);
 
     private:
-        static uint8_t dec2bcd(uint8_t n);
+        uint8_t dec2bcd(uint8_t n);
         static uint8_t bcd2dec(uint8_t n);
 };
 
