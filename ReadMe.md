@@ -329,7 +329,7 @@ RTC.squareWave(SQWAVE_NONE);	//no square wave
 
 ###oscStopped(bool clearOSF)
 #####Description
-Returns the value of the oscillator stop flag (OSF) bit in the control/status register which indicates that the oscillator is or was stopped, and that the timekeeping data may be invalid. Optionally clears the OSF bit depending on the argument passed. Calls to `set()` and `write()` also clear the OSF bit.
+Returns the value of the oscillator stop flag (OSF) bit in the control/status register which indicates that the oscillator is or was stopped, and that the timekeeping data may be invalid. Optionally clears the OSF bit depending on the argument passed. if the `clearOSF` argument is omitted, the OSF bit is cleared by default. Calls to `set()` and `write()` also clear the OSF bit.
 
 #####Syntax
 `RTC.oscStopped(clearOSF);`
