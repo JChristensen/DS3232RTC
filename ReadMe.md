@@ -91,7 +91,7 @@ myTime = RTC.get();
 
 ###set(time_t t)
 #####Description
-Sets the RTC date and time to the given *time_t* value.
+Sets the RTC date and time to the given *time_t* value. Clears the oscillator stop flag (OSF) bit in the control/status register. See the `oscStopped()` function and also the DS323x datasheet for more information on the OSF bit.
 #####Syntax
 `RTC.set(t);`
 #####Parameters
@@ -129,7 +129,7 @@ Serial.println(tm.Second,DEC);
 
 ###write(tmElements_t &tm)
 #####Description
-Sets the RTC to the date and time given by a *tmElements_t* structure.
+Sets the RTC to the date and time given by a *tmElements_t* structure. Clears the oscillator stop flag (OSF) bit in the control/status register. See the `oscStopped()` function and also the DS323x datasheet for more information on the OSF bit.
 #####Syntax
 `RTC.write(tm);`
 #####Parameters
@@ -327,18 +327,19 @@ RTC.squareWave(SQWAVE_1_HZ);	//1 Hz square wave
 RTC.squareWave(SQWAVE_NONE);	//no square wave
 ```
 
-###oscStopped(void)
+###oscStopped(bool clearOSF)
 #####Description
-Check whether the RTC oscillator is or was stopped. This may indicate that the RTC's time is not accurate.
+Returns the value of the oscillator stop flag (OSF) bit in the control/status register which indicates that the oscillator is or was stopped, and that the timekeeping data may be invalid. Optionally clears the OSF bit depending on the argument passed. if the `clearOSF` argument is omitted, the OSF bit is cleared by default. Calls to `set()` and `write()` also clear the OSF bit.
+
 #####Syntax
-`RTC.oscStopped();`
+`RTC.oscStopped(clearOSF);`
 #####Parameters
-None.
+**clearOSF:** an optional true or false value to indicate whether the OSF bit should be cleared (reset). If not supplied, a default value of true is used, resetting the OSF bit. *(bool)*
 #####Returns
-True or false *(boolean)*
+True or false *(bool)*
 #####Example
 ```c++
-if ( RTC.oscStopped() ) {		//check the oscillator
+if ( RTC.oscStopped(false) ) {		//check the oscillator
 	//may be trouble
 }
 else {

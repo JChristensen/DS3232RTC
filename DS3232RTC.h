@@ -28,10 +28,12 @@
  * is done by this library.                                             *
  *                                                                      *
  * Jack Christensen 06Mar2013                                           *
+ * http://github.com/JChristensen/DS3232RTC                             *
  *                                                                      *
  * CC BY-SA 4.0                                                         *
  * "Arduino DS3232RTC Library" by Jack Christensen is licensed under    *
- * CC BY-SA 4.0, http://creativecommons.org/licenses/by-sa/4.0/         * *----------------------------------------------------------------------*/ 
+ * CC BY-SA 4.0, http://creativecommons.org/licenses/by-sa/4.0/         *
+ *----------------------------------------------------------------------*/ 
 
 #ifndef DS3232RTC_h
 #define DS3232RTC_h
@@ -142,7 +144,7 @@ class DS3232RTC
         void alarmInterrupt(byte alarmNumber, bool alarmEnabled);
         bool alarm(byte alarmNumber);
         void squareWave(SQWAVE_FREQS_t freq);
-        bool oscStopped(bool clearOSF = true);
+        bool oscStopped(bool clearOSF = true);  //defaults to clear the OSF bit if argument not supplied
         int temperature(void);
 
     private:

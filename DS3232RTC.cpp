@@ -28,10 +28,12 @@
  * is done by this library.                                             *
  *                                                                      *
  * Jack Christensen 06Mar2013                                           *
+ * http://github.com/JChristensen/DS3232RTC                             *
  *                                                                      *
  * CC BY-SA 4.0                                                         *
  * "Arduino DS3232RTC Library" by Jack Christensen is licensed under    *
- * CC BY-SA 4.0, http://creativecommons.org/licenses/by-sa/4.0/         * *----------------------------------------------------------------------*/ 
+ * CC BY-SA 4.0, http://creativecommons.org/licenses/by-sa/4.0/         *
+ *----------------------------------------------------------------------*/ 
 
 #include <DS3232RTC.h>
 
@@ -71,8 +73,8 @@ DS3232RTC::DS3232RTC()
 }
   
 /*----------------------------------------------------------------------*
- * Read the current time from the RTC and return it as a time_t value.  *
- * Returns a zero value if an I2C error occurred (e.g. RTC              *
+ * Reads the current time from the RTC and returns it as a time_t       *
+ * value. Returns a zero value if an I2C error occurred (e.g. RTC       *
  * not present).                                                        *
  *----------------------------------------------------------------------*/
 time_t DS3232RTC::get()
@@ -84,7 +86,8 @@ time_t DS3232RTC::get()
 }
 
 /*----------------------------------------------------------------------*
- * Set the RTC to the given time_t value.                               *
+ * Sets the RTC to the given time_t value and clears the                *
+ * oscillator stop flag (OSF) in the Control/Status register.           *
  * Returns the I2C status (zero if successful).                         *
  *----------------------------------------------------------------------*/
 byte DS3232RTC::set(time_t t)
@@ -96,7 +99,7 @@ byte DS3232RTC::set(time_t t)
 }
 
 /*----------------------------------------------------------------------*
- * Read the current time from the RTC and return it in a tmElements_t   *
+ * Reads the current time from the RTC and returns it in a tmElements_t *
  * structure. Returns the I2C status (zero if successful).              *
  *----------------------------------------------------------------------*/
 byte DS3232RTC::read(tmElements_t &tm)
@@ -117,7 +120,8 @@ byte DS3232RTC::read(tmElements_t &tm)
 }
 
 /*----------------------------------------------------------------------*
- * Set the RTC's time from a tmElements_t structure.                    *
+ * Sets the RTC's time from a tmElements_t structure and clears the     *
+ * oscillator stop flag (OSF) in the Control/Status register.           *
  * Returns the I2C status (zero if successful).                         *
  *----------------------------------------------------------------------*/
 byte DS3232RTC::write(tmElements_t &tm)
@@ -294,8 +298,10 @@ void DS3232RTC::squareWave(SQWAVE_FREQS_t freq)
 }
 
 /*----------------------------------------------------------------------*
- * Checks the OSF bit in the status register which indicates that the   *
- * oscillator is or was stopped.                                        *
+ * Returns the value of the oscillator stop flag (OSF) bit in the       *
+ * control/status register which indicates that the oscillator is or    *
+ * was stopped, and that the timekeeping data may be invalid.           *
+ * Optionally clears the OSF bit depending on the argument passed.      *
  *----------------------------------------------------------------------*/
 bool DS3232RTC::oscStopped(bool clearOSF)
 {
