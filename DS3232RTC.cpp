@@ -280,6 +280,18 @@ bool DS3232RTC::alarm(byte alarmNumber)
 }
 
 /*----------------------------------------------------------------------*
+ * Returns true or false depending on whether the given alarm has been  *
+ * triggered                                                            *
+ *----------------------------------------------------------------------*/
+bool DS3232RTC::isAlarm(byte alarmNumber)
+{
+    uint8_t statusReg, mask;
+    
+    statusReg = readRTC(RTC_STATUS);
+    mask = _BV(A1F) << (alarmNumber - 1);
+    return statusReg & mask;
+}
+/*----------------------------------------------------------------------*
  * Enable or disable the square wave output.                            *
  * Use a value from the SQWAVE_FREQS_t enumeration for the parameter.   *
  *----------------------------------------------------------------------*/
