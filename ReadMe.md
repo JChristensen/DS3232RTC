@@ -19,7 +19,7 @@ This library is ***not*** a drop-in replacement for [PJRC's newer version of the
 ## Installation ##
 To use the **DS3232RTC** library:  
 - Go to https://github.com/JChristensen/DS3232RTC, click the **Download ZIP** button and save the ZIP file to a convenient location on your PC.
-- Uncompress the downloaded file.  This will result in a folder containing all the files for the library, that has a name that includes the branch name, usually **DS3232RTC-master**.
+- Uncompress the downloaded file. This will result in a folder containing all the files for the library, that has a name that includes the branch name, usually **DS3232RTC-master**.
 - Rename the folder to just **DS3232RTC**.
 - Copy the renamed folder to the Arduino sketchbook\libraries folder.
 
@@ -35,7 +35,7 @@ When using the **DS3232RTC** library, the user is responsible for ensuring that 
 
 Similar to the **DS1307RTC** library, the **DS3232RTC** library instantiates an RTC object; the user does not need to do this.
 
-To use the **DS3232RTC** library, the Time and Wire libraries must also be included.  For brevity, these includes are not repeated in the examples below:
+To use the **DS3232RTC** library, the Time and Wire libraries must also be included. For brevity, these includes are not repeated in the examples below:
 ```c++
 #include <DS3232RTC.h>    //http://github.com/JChristensen/DS3232RTC
 #include <Time.h>         //http://www.arduino.cc/playground/Code/Time
@@ -242,7 +242,7 @@ RTC.setAlarm(ALM1_MATCH_DAY, 56, 34, 12, dowSunday);
 
 ###setAlarm(ALARM_TYPES_t alarmType, byte minutes, byte hours, byte daydate)
 #####Description
-Set an alarm time. Sets the alarm registers only.  To cause the INT pin to be asserted on alarm match, use alarmInterrupt().  This method can set either Alarm 1 or Alarm 2, depending on the value of alarmType (use the ALARM_TYPES_t enumeration above). However, when using this method to set Alarm 1, the seconds value is set to zero. (Alarm 2 has no seconds register.)
+Set an alarm time. Sets the alarm registers only. To cause the INT pin to be asserted on alarm match, use alarmInterrupt(). This method can set either Alarm 1 or Alarm 2, depending on the value of alarmType (use the ALARM_TYPES_t enumeration above). However, when using this method to set Alarm 1, the seconds value is set to zero. (Alarm 2 has no seconds register.)
 
 #####Syntax
 `RTC.setAlarm(alarmType, minutes, hours, dayOrDate);`
