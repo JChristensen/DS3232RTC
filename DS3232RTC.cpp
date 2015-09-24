@@ -196,7 +196,7 @@ byte DS3232RTC::readRTC(byte addr)
 }
 
 /*----------------------------------------------------------------------*
- * Set an alarm time. Sets the alarm registers only.  To cause the      *
+ * Set an alarm time. Sets the alarm registers only. To cause the       *
  * INT pin to be asserted on alarm match, use alarmInterrupt().         *
  * This method can set either Alarm 1 or Alarm 2, depending on the      *
  * value of alarmType (use a value from the ALARM_TYPES_t enumeration). *
@@ -230,7 +230,7 @@ void DS3232RTC::setAlarm(ALARM_TYPES_t alarmType, byte seconds, byte minutes, by
 }
 
 /*----------------------------------------------------------------------*
- * Set an alarm time. Sets the alarm registers only.  To cause the      *
+ * Set an alarm time. Sets the alarm registers only. To cause the       *
  * INT pin to be asserted on alarm match, use alarmInterrupt().         *
  * This method can set either Alarm 1 or Alarm 2, depending on the      *
  * value of alarmType (use a value from the ALARM_TYPES_t enumeration). *
