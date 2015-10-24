@@ -325,7 +325,7 @@ int DS3232RTC::temperature(void)
     
     rtcTemp.b[0] = readRTC(TEMP_LSB);
     rtcTemp.b[1] = readRTC(TEMP_MSB);
-    return rtcTemp.i >> 6;
+    return rtcTemp.i / 64;
 }
 
 /*----------------------------------------------------------------------*
