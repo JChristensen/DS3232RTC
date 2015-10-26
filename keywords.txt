@@ -1,13 +1,31 @@
+#######################################
+# Syntax Coloring Map For JChristensen/DS3232RTC
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
 DS3232RTC	KEYWORD1
-get	KEYWORD2
-set	KEYWORD2
-read	KEYWORD2
-write	KEYWORD2
-writeRTC	KEYWORD2
-readRTC	KEYWORD2
-setAlarm	KEYWORD2
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+get	            KEYWORD2
+set	            KEYWORD2
+read            KEYWORD2
+write	          KEYWORD2
+writeRTC	      KEYWORD2
+readRTC	        KEYWORD2
+setAlarm	      KEYWORD2
 alarmInterrupt	KEYWORD2
-alarm	KEYWORD2
-squareWave	KEYWORD2
-oscStopped	KEYWORD2
-temperature	KEYWORD2
+alarm	          KEYWORD2
+squareWave	    KEYWORD2
+oscStopped	    KEYWORD2
+temperature	    KEYWORD2
+#######################################
+# Constants (LITERAL1)
+#######################################
+SQWAVE_1_HZ     LITERAL1
+SQWAVE_1024_HZ  LITERAL1
+SQWAVE_4096_HZ  LITERAL1
+SQWAVE_8192_HZ  LITERAL1
+SQWAVE_NONE     LITERAL1

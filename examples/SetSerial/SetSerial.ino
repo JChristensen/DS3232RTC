@@ -44,9 +44,9 @@ void setup(void)
     //setSyncProvider() causes the Time library to synchronize with the
     //external RTC by calling RTC.get() every five minutes by default.
     setSyncProvider(RTC.get);
-    Serial << F("RTC Sync");
+    Serial << F("RTC Sync"); // Print a message via Serial.
     if (timeStatus() != timeSet) Serial << F(" FAIL!");
-    Serial << endl;
+    Serial << endl; // Print an End Of Line
 }
 
 void loop(void)
@@ -97,7 +97,10 @@ void loop(void)
     }
 }
 
-//print date and time to Serial
+/*
+ * print date and time to Serial
+ * This function does not use the serial.print() function, but a streaming function.
+ */
 void printDateTime(time_t t)
 {
     printDate(t);
@@ -120,9 +123,11 @@ void printDate(time_t t)
     Serial << monthShortStr(month(t)) << _DEC(year(t));
 }
 
-//Print an integer in "00" format (with leading zero),
-//followed by a delimiter character to Serial.
-//Input value assumed to be between 0 and 99.
+/*
+ * Print an integer in "00" format (with leading zero),
+ * followed by a delimiter character to Serial.
+ * Input value assumed to be between 0 and 99.
+ */
 void printI00(int val, char delim)
 {
     if (val < 10) Serial << '0';
