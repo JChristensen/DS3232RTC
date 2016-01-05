@@ -242,6 +242,52 @@ void DS3232RTC::setAlarm(ALARM_TYPES_t alarmType, byte minutes, byte hours, byte
     setAlarm(alarmType, 0, minutes, hours, daydate);
 }
 
+ALARM_TYPES_t DS3232RTC::readAlarm(byte alarmNumber, tmElements_t &tm)
+{
+    uint8_t addr;
+    uint16_t alarmType;
+    
+    if (alarmNumber == ALARM_1) {
+        addr = ALM1_SECONDS;
+        alarmType = 0x00;
+        
+        byte secondDcb = readRTC(addr++);
+        if (secondDcb & _BV(A1M1)) alarmType &= 0x01;
+        secondDcb &= ~(_BV(A1M1));
+        tm.Second = bcd2dec(secondDcb);
+    }
+    else {
+        addr = ALM2_MINUTES;
+        alarmType = 0x80;
+        tm.Second = 0;
+    }
+    
+    byte minuteDcb = readRTC(addr++);
+    if (minuteDcb & _BV(A1M2)) alarmType |= 0x02;
+    minuteDcb &= ~(_BV(A1M2));
+    tm.Minute = bcd2dec(minuteDcb);
+    
+    byte hourDcb = readRTC(addr++);
+    if (hourDcb & _BV(A1M3)) alarmType |= 0x04;
+    hourDcb &= ~(_BV(A1M3));
+    tm.Hour = bcd2dec(hourDcb);
+
+    byte daydateBcd = readRTC(addr++);
+    if (daydateBcd & _BV(DYDT)) alarmType |= 0x10;
+    if (daydateBcd & _BV(A1M4)) alarmType |= 0x08;
+    daydateBcd &= ~(_BV(A1M4));
+    if (daydateBcd & _BV(DYDT)) {
+        daydateBcd &= ~(_BV(DYDT));
+        tm.Wday = bcd2dec(daydateBcd);
+        tm.Day = 0;
+    } else {
+        tm.Day = bcd2dec(daydateBcd);
+        tm.Wday = 0;
+    }
+
+    return ((ALARM_TYPES_t) alarmType);
+}
+
 /*----------------------------------------------------------------------*
  * Enable or disable an alarm "interrupt" which asserts the INT pin     *
  * on the RTC.                                                          *

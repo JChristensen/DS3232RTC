@@ -141,6 +141,7 @@ class DS3232RTC
         byte readRTC(byte addr);
         void setAlarm(ALARM_TYPES_t alarmType, byte seconds, byte minutes, byte hours, byte daydate);
         void setAlarm(ALARM_TYPES_t alarmType, byte minutes, byte hours, byte daydate);
+        ALARM_TYPES_t readAlarm(byte alarmNumber, tmElements_t &tm);
         void alarmInterrupt(byte alarmNumber, bool alarmEnabled);
         bool alarm(byte alarmNumber);
         void squareWave(SQWAVE_FREQS_t freq);
