@@ -146,6 +146,7 @@ class DS3232RTC
         void squareWave(SQWAVE_FREQS_t freq);
         bool oscStopped(bool clearOSF = true);  //defaults to clear the OSF bit if argument not supplied
         int temperature(void);
+        byte errCode;
 
     private:
         uint8_t dec2bcd(uint8_t n);

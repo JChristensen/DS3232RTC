@@ -106,7 +106,7 @@ byte DS3232RTC::read(tmElements_t &tm)
 {
     i2cBeginTransmission(RTC_ADDR);
     i2cWrite((uint8_t)RTC_SECONDS);
-    if ( byte e = i2cEndTransmission() ) return e;
+    if ( byte e = i2cEndTransmission() ) { errCode = e; return e; }
     //request 7 bytes (secs, min, hr, dow, date, mth, yr)
     i2cRequestFrom(RTC_ADDR, tmNbrFields);
     tm.Second = bcd2dec(i2cRead() & ~_BV(DS1307_CH));   
