@@ -25,6 +25,7 @@ To use the **DS3232RTC** library:
 
 ## Examples ##
 The following example sketches are included with the **DS3232RTC** library:
+- **Alarm_Interrupts:** Demonstrates the use of the two Alarm Registers as well as Interrupt functionality of this RTC.
 - **SetSerial:** Set the RTC's date and time from the Arduino serial monitor. Displays date, time and temperature.
 - **TimeRTC:** Same as the example of the same name provided with the **Time** library, demonstrating the interchangeability of the **DS3232RTC** library with the **DS1307RTC** library.
 - **tiny3232_KnockBang:** Demonstrates interfacing an ATtiny45/85 to a DS3231 or DS3232 RTC.
