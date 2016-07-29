@@ -38,7 +38,7 @@ Similar to the **DS1307RTC** library, the **DS3232RTC** library instantiates an 
 To use the **DS3232RTC** library, the Time and Wire libraries must also be included.  For brevity, these includes are not repeated in the examples below:
 ```c++
 #include <DS3232RTC.h>    //http://github.com/JChristensen/DS3232RTC
-#include <Time.h>         //http://www.arduino.cc/playground/Code/Time
+#include <TimeLib.h>      //http://www.arduino.cc/playground/Code/Time
 #include <Wire.h>         //http://arduino.cc/en/Reference/Wire (included with Arduino IDE)
 ```
 

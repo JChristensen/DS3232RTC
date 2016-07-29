@@ -34,7 +34,7 @@
  
 #include <DS3232RTC.h>        //http://github.com/JChristensen/DS3232RTC
 #include <Streaming.h>        //http://arduiniana.org/libraries/streaming/
-#include <Time.h>             //http://playground.arduino.cc/Code/Time
+#include <TimeLib.h>          //http://playground.arduino.cc/Code/Time
 #include <Wire.h>             //http://arduino.cc/en/Reference/Wire
 
 void setup(void)
@@ -59,7 +59,7 @@ void loop(void)
     if (Serial.available() >= 12) {
         //note that the tmElements_t Year member is an offset from 1970,
         //but the RTC wants the last two digits of the calendar year.
-        //use the convenience macros from Time.h to do the conversions.
+        //use the convenience macros from TimeLib.h to do the conversions.
         int y = Serial.parseInt();
         if (y >= 100 && y < 1000)
             Serial << F("Error: Year must be two digits or four digits!") << endl;

@@ -6,7 +6,7 @@
  */
 
 #include <DS3232RTC.h>    //http://github.com/JChristensen/DS3232RTC
-#include <Time.h>         //http://www.arduino.cc/playground/Code/Time  
+#include <TimeLib.h>      //http://www.arduino.cc/playground/Code/Time
 #include <Wire.h>         //http://arduino.cc/en/Reference/Wire (included with Arduino IDE)
 
 void setup(void)
