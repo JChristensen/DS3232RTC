@@ -66,8 +66,8 @@
 #define RTC_CONTROL 0x0E
 #define RTC_STATUS 0x0F
 #define RTC_AGING 0x10
-#define TEMP_MSB 0x11
-#define TEMP_LSB 0x12
+#define TEMP_RTC_MSB 0x11
+#define TEMP_RTC_LSB 0x12
 #define SRAM_START_ADDR 0x14    //first SRAM address
 #define SRAM_SIZE 236           //number of bytes of SRAM
 
@@ -145,7 +145,7 @@ class DS3232RTC
         bool alarm(byte alarmNumber);
         void squareWave(SQWAVE_FREQS_t freq);
         bool oscStopped(bool clearOSF = true);  //defaults to clear the OSF bit if argument not supplied
-        int temperature(void);
+        float temperature(void);
         static byte errCode;
 
     private:
