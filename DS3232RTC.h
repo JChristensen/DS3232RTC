@@ -1,7 +1,7 @@
 /*----------------------------------------------------------------------*
  * DS3232RTC.h - Arduino library for the Maxim Integrated DS3232        *
- * Real-Time Clock. This library is intended for use with the Arduino   *
- * Time.h library, http://www.arduino.cc/playground/Code/Time           *
+ * Real-Time Clock. This library is intended to be used the avr-libc    *
+ * built in time library (Arduino IDE 1.6.10+).                         *
  *                                                                      *
  * This library is a drop-in replacement for the DS1307RTC.h library    *
  * by Michael Margolis that is supplied with the Arduino Time library   *
@@ -132,9 +132,9 @@ class DS3232RTC
     public:
         DS3232RTC();
         static time_t get(void);    //must be static to work with setSyncProvider() in the Time library
-        byte set(time_t t);
-        static byte read(tmElements_t &tm);
-        byte write(tmElements_t &tm);
+        byte set(const time_t t);
+        static byte read(struct tm *tm);
+        byte write(struct tm *tm);
         byte writeRTC(byte addr, byte *values, byte nBytes);
         byte writeRTC(byte addr, byte value);
         byte readRTC(byte addr, byte *values, byte nBytes);
