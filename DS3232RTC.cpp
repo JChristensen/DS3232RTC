@@ -1,7 +1,7 @@
 /*----------------------------------------------------------------------*
  * DS3232RTC.cpp - Arduino library for the Maxim Integrated DS3232      *
- * Real-Time Clock. This library is intended for use with the Arduino   *
- * Time.h library, http://www.arduino.cc/playground/Code/Time           *
+ * Real-Time Clock. This library is intended to be used the avr-libc    *
+ * built in time library (Arduino IDE 1.6.10+).                         *
  *                                                                      *
  * This library is a drop-in replacement for the DS1307RTC.h library    *
  * by Michael Margolis that is supplied with the Arduino Time library   *
@@ -79,10 +79,10 @@ DS3232RTC::DS3232RTC()
  *----------------------------------------------------------------------*/
 time_t DS3232RTC::get()
 {
-    tmElements_t tm;
+    struct tm tm;
     
-    if ( read(tm) ) return 0;
-    return( makeTime(tm) );
+    if ( read(&tm) ) return 0;
+    return( mk_gmtime(&tm) );
 }
 
 /*----------------------------------------------------------------------*
@@ -90,51 +90,52 @@ time_t DS3232RTC::get()
  * oscillator stop flag (OSF) in the Control/Status register.           *
  * Returns the I2C status (zero if successful).                         *
  *----------------------------------------------------------------------*/
-byte DS3232RTC::set(time_t t)
+byte DS3232RTC::set(const time_t t)
 {
-    tmElements_t tm;
+    struct tm tm;
 
-    breakTime(t, tm);
-    return ( write(tm) );
+    gmtime_r(&t, &tm);
+    return ( write(&tm) );
 }
 
 /*----------------------------------------------------------------------*
- * Reads the current time from the RTC and returns it in a tmElements_t *
+ * Reads the current time from the RTC and returns it in a tm           *
  * structure. Returns the I2C status (zero if successful).              *
  *----------------------------------------------------------------------*/
-byte DS3232RTC::read(tmElements_t &tm)
+byte DS3232RTC::read(struct tm *tm)
 {
     i2cBeginTransmission(RTC_ADDR);
     i2cWrite((uint8_t)RTC_SECONDS);
     if ( byte e = i2cEndTransmission() ) return e;
     //request 7 bytes (secs, min, hr, dow, date, mth, yr)
-    i2cRequestFrom(RTC_ADDR, tmNbrFields);
-    tm.Second = bcd2dec(i2cRead() & ~_BV(DS1307_CH));   
-    tm.Minute = bcd2dec(i2cRead());
-    tm.Hour = bcd2dec(i2cRead() & ~_BV(HR1224));    //assumes 24hr clock
-    tm.Wday = i2cRead();
-    tm.Day = bcd2dec(i2cRead());
-    tm.Month = bcd2dec(i2cRead() & ~_BV(CENTURY));  //don't use the Century bit
-    tm.Year = y2kYearToTm(bcd2dec(i2cRead()));
+    i2cRequestFrom(RTC_ADDR, 7);
+    tm->tm_sec = bcd2dec(i2cRead() & ~_BV(DS1307_CH));
+    tm->tm_min = bcd2dec(i2cRead());
+    tm->tm_hour = bcd2dec(i2cRead() & ~_BV(HR1224));    //assumes 24hr clock
+    tm->tm_wday = i2cRead() - 1;
+    tm->tm_mday = bcd2dec(i2cRead());
+    tm->tm_mon = bcd2dec(i2cRead() & ~_BV(CENTURY)) - 1;  //don't use the Century bit
+    tm->tm_year = bcd2dec(i2cRead()) + 100;
+    tm->tm_isdst = 0;
     return 0;
 }
 
 /*----------------------------------------------------------------------*
- * Sets the RTC's time from a tmElements_t structure and clears the     *
+ * Sets the RTC's time from a tm structure and clears the               *
  * oscillator stop flag (OSF) in the Control/Status register.           *
  * Returns the I2C status (zero if successful).                         *
  *----------------------------------------------------------------------*/
-byte DS3232RTC::write(tmElements_t &tm)
+byte DS3232RTC::write(struct tm *tm)
 {
     i2cBeginTransmission(RTC_ADDR);
     i2cWrite((uint8_t)RTC_SECONDS);
-    i2cWrite(dec2bcd(tm.Second));
-    i2cWrite(dec2bcd(tm.Minute));
-    i2cWrite(dec2bcd(tm.Hour));         //sets 24 hour format (Bit 6 == 0)
-    i2cWrite(tm.Wday);
-    i2cWrite(dec2bcd(tm.Day));
-    i2cWrite(dec2bcd(tm.Month));
-    i2cWrite(dec2bcd(tmYearToY2k(tm.Year))); 
+    i2cWrite(dec2bcd(tm->tm_sec));
+    i2cWrite(dec2bcd(tm->tm_min));
+    i2cWrite(dec2bcd(tm->tm_hour));         //sets 24 hour format (Bit 6 == 0)
+    i2cWrite(tm->tm_wday + 1);
+    i2cWrite(dec2bcd(tm->tm_mday));
+    i2cWrite(dec2bcd(tm->tm_mon + 1));
+    i2cWrite(dec2bcd(tm->tm_year - 100));
     byte ret = i2cEndTransmission();
     uint8_t s = readRTC(RTC_STATUS);        //read the status register
     writeRTC( RTC_STATUS, s & ~_BV(OSF) );  //clear the Oscillator Stop Flag

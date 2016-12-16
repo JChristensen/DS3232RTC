@@ -6,7 +6,7 @@ Jack Christensen Mar 2013
 ![CC BY-SA](http://mirrors.creativecommons.org/presskit/buttons/80x15/png/by-sa.png)
 
 ## Introduction ##
-**DS3232RTC** is an Arduino library that supports the Maxim Integrated DS3232 and DS3231 Real-Time Clocks. This library is intended to be used with the [Arduino Time library](http://www.arduino.cc/playground/Code/Time).
+**DS3232RTC** is an Arduino library that supports the Maxim Integrated DS3232 and DS3231 Real-Time Clocks. This library is intended to be used the avr-libc built in time library (Arduino IDE 1.6.10+).
 
 The **DS3232RTC** library is a drop-in replacement for the DS1307RTC.h library by Michael Margolis that is supplied with the Arduino Time library above. To change from using a DS1307 RTC to an DS323x RTC, it is only necessary to use `#include <DS3232RTC.h>` instead of `#include <DS1307RTC.h>`.
 
@@ -38,7 +38,7 @@ Similar to the **DS1307RTC** library, the **DS3232RTC** library instantiates an 
 To use the **DS3232RTC** library, the Time and Wire libraries must also be included.  For brevity, these includes are not repeated in the examples below:
 ```c++
 #include <DS3232RTC.h>    //http://github.com/JChristensen/DS3232RTC
-#include <Time.h>         //http://www.arduino.cc/playground/Code/Time
+#include <Time.h>         //http://www.nongnu.org/avr-libc/user-manual/group__avr__time.html (included with Arduino IDE)
 #include <Wire.h>         //http://arduino.cc/en/Reference/Wire (included with Arduino IDE)
 ```
 
