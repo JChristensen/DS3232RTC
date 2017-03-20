@@ -66,8 +66,8 @@
 #define RTC_CONTROL 0x0E
 #define RTC_STATUS 0x0F
 #define RTC_AGING 0x10
-#define TEMP_MSB 0x11
-#define TEMP_LSB 0x12
+#define RTC_TEMP_MSB 0x11
+#define RTC_TEMP_LSB 0x12
 #define SRAM_START_ADDR 0x14    //first SRAM address
 #define SRAM_SIZE 236           //number of bytes of SRAM
 
