@@ -316,18 +316,31 @@ bool DS3232RTC::oscStopped(bool clearOSF)
 }
 
 /*----------------------------------------------------------------------*
- * Returns the temperature in Celsius times four.                       *
+ * Returns the temperature in Celsius.                       *
  *----------------------------------------------------------------------*/
-int DS3232RTC::temperature(void)
+float DS3232RTC::temperature(void)
 {
-    union int16_byte {
-        int i;
-        byte b[2];
-    } rtcTemp;
-    
-    rtcTemp.b[0] = readRTC(TEMP_LSB);
-    rtcTemp.b[1] = readRTC(TEMP_MSB);
-    return rtcTemp.i / 64;
+	float rtcTemp = 0;
+	
+	// Read registers value
+	byte tLSB = readRTC(TEMP_RTC_LSB) >> 6; // 2 bits of temperature fractional portion
+	byte tMSB = readRTC(TEMP_RTC_MSB); // 7 bits of integer portion + 1 bit (MSbit) of sign
+	
+	// Check if temperature is negative evaluating MSbit
+	if(tMSB & B10000000){
+		tMSB |= B10000000; // Clear sign bit
+		
+		// Build value
+		rtcTemp += tMSB;
+		rtcTemp += (tLSB*0.25);
+		rtcTemp = -rtcTemp; // Apply sign
+	} else {
+		// Build value
+		rtcTemp += tMSB;
+		rtcTemp += (tLSB*0.25);
+	}
+
+	return rtcTemp;
 }
 
 /*----------------------------------------------------------------------*
