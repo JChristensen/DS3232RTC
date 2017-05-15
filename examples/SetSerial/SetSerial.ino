@@ -35,6 +35,7 @@
 #include <DS3232RTC.h>        //http://github.com/JChristensen/DS3232RTC
 #include <Streaming.h>        //http://arduiniana.org/libraries/streaming/
 #include <Time.h>             //http://playground.arduino.cc/Code/Time
+#include <TimeLib.h>          //https://github.com/PaulStoffregen/Time
 #include <Wire.h>             //http://arduino.cc/en/Reference/Wire
 
 void setup(void)
