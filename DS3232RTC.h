@@ -66,8 +66,8 @@
 #define RTC_CONTROL 0x0E
 #define RTC_STATUS 0x0F
 #define RTC_AGING 0x10
-#define TEMP_MSB 0x11
-#define TEMP_LSB 0x12
+#define RTC_TEMP_MSB 0x11
+#define RTC_TEMP_LSB 0x12
 #define SRAM_START_ADDR 0x14    //first SRAM address
 #define SRAM_SIZE 236           //number of bytes of SRAM
 
@@ -131,7 +131,7 @@ class DS3232RTC
 {
     public:
         DS3232RTC();
-        static time_t get(void);    //must be static to work with setSyncProvider() in the Time library
+        static time_t get();       //must be static to work with setSyncProvider() in the Time library
         byte set(time_t t);
         static byte read(tmElements_t &tm);
         byte write(tmElements_t &tm);
@@ -144,8 +144,8 @@ class DS3232RTC
         void alarmInterrupt(byte alarmNumber, bool alarmEnabled);
         bool alarm(byte alarmNumber);
         void squareWave(SQWAVE_FREQS_t freq);
-        bool oscStopped(bool clearOSF = true);  //defaults to clear the OSF bit if argument not supplied
-        int temperature(void);
+        bool oscStopped(bool clearOSF = false);
+        int temperature();
         static byte errCode;
 
     private:

@@ -141,7 +141,7 @@ I2C status *(byte)*. Returns zero if successful.
 tmElements_t tm;
 tm.Hour = 23;             //set the tm structure to 23h31m30s on 13Feb2009
 tm.Minute = 31;
-tm.Minute = 30;
+tm.Second = 30;
 tm.Day = 13;
 tm.Month = 2;
 tm.Year = 2009 - 1970;    //tmElements_t.Year is the offset from 1970
