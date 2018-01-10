@@ -1,46 +1,32 @@
-# Arduino DS3232RTC Library v1.0 #
-https://github.com/JChristensen/DS3232RTC
-ReadMe file  
+# Arduino DS3232RTC Library
+https://github.com/JChristensen/DS3232RTC  
+README file  
 Jack Christensen Mar 2013
 
 ![CC BY-SA](http://mirrors.creativecommons.org/presskit/buttons/80x15/png/by-sa.png)
 
 ## Introduction
-**DS3232RTC** is an Arduino library that supports the Maxim Integrated DS3232 and DS3231 Real-Time Clocks. This library is intended to be used with the [Arduino Time library](http://www.arduino.cc/playground/Code/Time).
+**DS3232RTC** is an Arduino library that supports the Maxim Integrated DS3232 and DS3231 Real-Time Clocks. This library is intended to be used with [PJRC's Arduino Time library](https://github.com/PaulStoffregen/Time).
 
-The **DS3232RTC** library is a drop-in replacement for the DS1307RTC.h library by Michael Margolis that is supplied with the Arduino Time library above. To change from using a DS1307 RTC to an DS323x RTC, it is only necessary to use `#include <DS3232RTC.h>` instead of `#include <DS1307RTC.h>`.
-
-This library is ***not*** a drop-in replacement for [PJRC's newer version of the DS1307RTC library](http://www.pjrc.com/teensy/td_libs_DS1307RTC.html).
+The **DS3232RTC** library is a drop-in replacement for the (older) DS1307RTC.h library by Michael Margolis that is supplied with the [Arduino Time library](https://www.arduino.cc/playground/Code/Time) (but not for [PJRC's newer version of the DS1307RTC library](https://www.pjrc.com/teensy/td_libs_DS1307RTC.html)). To change from using a DS1307 RTC to an DS323x RTC, it is only necessary to use `#include <DS3232RTC.h>` instead of `#include <DS1307RTC.h>`.
 
 **DS3232RTC** also implements functions to support the additional features of the DS3232 and DS3231. The DS3231 has the same features as the DS3232 except: (1) Battery-backed SRAM, (2) Battery-backed 32kHz output (BB32kHz bit in Control/Status register 0x0F), and (3) Adjustable temperature sensor sample rate (CRATE1:0 bits in the Control/Status register).
 
 "Arduino DS3232RTC Library" by Jack Christensen is licensed under CC BY-SA 4.0.
 
-## Installation
-To use the **DS3232RTC** library:  
-- Go to https://github.com/JChristensen/DS3232RTC, click the **Download ZIP** button and save the ZIP file to a convenient location on your PC.
-- Uncompress the downloaded file.  This will result in a folder containing all the files for the library, that has a name that includes the branch name, usually **DS3232RTC-master**.
-- Rename the folder to just **DS3232RTC**.
-- Copy the renamed folder to the Arduino sketchbook\libraries folder.
-
 ## Examples
 The following example sketches are included with the **DS3232RTC** library:
+
 - **SetSerial:** Set the RTC's date and time from the Arduino serial monitor. Displays date, time and temperature.
 - **TimeRTC:** Same as the example of the same name provided with the **Time** library, demonstrating the interchangeability of the **DS3232RTC** library with the **DS1307RTC** library.
 - **tiny3232_KnockBang:** Demonstrates interfacing an ATtiny45/85 to a DS3231 or DS3232 RTC.
+- Several examples for using the RTC alarms. See the [alarm primer](https://github.com/JChristensen/DS3232RTC/blob/master/alarm-primer.md) for more information.
 
 ## Usage notes
 
 When using the **DS3232RTC** library, the user is responsible for ensuring that reads and writes do not exceed the device's address space (0x00-0x12 for DS3231, 0x00-0xFF for DS3232); no bounds checking is done by the library.            
 
 Similar to the **DS1307RTC** library, the **DS3232RTC** library instantiates an RTC object; the user does not need to do this.
-
-To use the **DS3232RTC** library, the Time and Wire libraries must also be included.  For brevity, these includes are not repeated in the examples below:
-```c++
-#include <DS3232RTC.h>    //http://github.com/JChristensen/DS3232RTC
-#include <Time.h>         //http://www.arduino.cc/playground/Code/Time
-#include <Wire.h>         //http://arduino.cc/en/Reference/Wire (included with Arduino IDE)
-```
 
 ## Enumerations
 ### SQWAVE_FREQS_t
@@ -109,7 +95,7 @@ RTC.set(now());                     //set the RTC from the system time
 
 ### read(tmElements_t &tm)
 ##### Description
-Reads the current date and time from the RTC and returns it as a *tmElements_t* structure. See the [Arduino Time library](http://www.arduino.cc/playground/Code/Time) for details on the *tmElements_t* structure.
+Reads the current date and time from the RTC and returns it as a *tmElements_t* structure. See the Arduino [Time](https://www.arduino.cc/playground/Code/Time) [Library](https://github.com/PaulStoffregen/Time) for details on the *tmElements_t* structure.
 ##### Syntax
 `RTC.read(tm);`
 ##### Parameters
@@ -256,7 +242,7 @@ None.
 ##### Example
 ```c++
 //Set Alarm2 for 12:34 on the 4th day of the month
-RTC.setAlarm(ALM1_MATCH_DATE, 34, 12, 4);
+RTC.setAlarm(ALM2_MATCH_DATE, 34, 12, 4);
 ```
 
 ### alarmInterrupt(byte alarmNumber, boolean alarmEnabled)

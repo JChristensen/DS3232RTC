@@ -1,43 +1,20 @@
-/*----------------------------------------------------------------------*
- * DS3232RTC.h - Arduino library for the Maxim Integrated DS3232        *
- * Real-Time Clock. This library is intended for use with the Arduino   *
- * Time.h library, http://www.arduino.cc/playground/Code/Time           *
- *                                                                      *
- * This library is a drop-in replacement for the DS1307RTC.h library    *
- * by Michael Margolis that is supplied with the Arduino Time library   *
- * above. To change from using a DS1307 RTC to an DS3232 RTC, it is     *
- * only necessary to change the #include statement to include this      *
- * library instead of DS1307RTC.h.                                      *
- *                                                                      *
- * This library is *not* a drop-in replacement for the newer version    *
- * of the DS1307RTC library at                                          *
- * http://www.pjrc.com/teensy/td_libs_DS1307RTC.html                    *
- *                                                                      *
- * In addition, this library implements functions to support the        *
- * additional features of the DS3232.                                   *
- *                                                                      *
- * This library will also work with the DS3231 RTC, which has the same  *
- * features of the DS3232 except: (1) Battery-backed SRAM, (2) Battery- *
- * backed 32kHz output (BB32kHz bit in Control/Status register 0x0F),   *
- * and (3) Adjustable temperature sensor sample rate (CRATE1:0 bits in  *
- * the Control/Status register).                                        *
- *                                                                      *
- * Whether used with the DS3232 or DS3231, the user is responsible for  *
- * ensuring reads and writes do not exceed the device's address space   *
- * (0x00-0x12 for DS3231, 0x00-0xFF for DS3232); no bounds checking     *
- * is done by this library.                                             *
- *                                                                      *
- * Jack Christensen 06Mar2013                                           *
- * http://github.com/JChristensen/DS3232RTC                             *
- *                                                                      *
- * CC BY-SA 4.0                                                         *
- * "Arduino DS3232RTC Library" by Jack Christensen is licensed under    *
- * CC BY-SA 4.0, http://creativecommons.org/licenses/by-sa/4.0/         *
- *----------------------------------------------------------------------*/ 
+// Arduino DS3232RTC Library
+// DS3232RTC.h
+// Arduino library for the Maxim Integrated DS3232 and DS3231
+// Real-Time Clocks.
+// Requires PJRC's improved version of the Arduino Time Library,
+// https://playground.arduino.cc/Code/Time
+// https://github.com/PaulStoffregen/Time
+//
+// Jack Christensen 06Mar2013
+// https://github.com/JChristensen/DS3232RTC
+//
+// "Arduino DS3232RTC Library" by Jack Christensen is licensed under
+// CC BY-SA 4.0, https://creativecommons.org/licenses/by-sa/4.0/
 
-#ifndef DS3232RTC_h
-#define DS3232RTC_h
-#include <Time.h>
+#ifndef DS3232RTC_H_INCLUDED
+#define DS3232RTC_H_INCLUDED
+#include <TimeLib.h>
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include <Arduino.h> 
