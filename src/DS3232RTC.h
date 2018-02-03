@@ -130,6 +130,12 @@ class DS3232RTC
         static uint8_t bcd2dec(uint8_t n);
 };
 
+#if defined ARDUINO_ARCH_AVR
 extern DS3232RTC RTC;
+#endif
+
+#ifndef _BV
+#define _BV(bit) (1 << (bit))
+#endif
 
 #endif
