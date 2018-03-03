@@ -6,6 +6,15 @@
 // https://playground.arduino.cc/Code/Time
 // https://github.com/PaulStoffregen/Time
 //
+// For AVR architecture, a DS3232RTC object named RTC is instantiated
+// by the library and I2C initialization occurs in the constructor;
+// this is for backwards compatibility.
+// For other architectures, the user needs to instantiate a DS3232RTC
+// object and optionally initialize the I2C bus by calling
+// DS3232RTC::begin(). The constructor has an optional bool parameter
+// to indicate whether I2C initialization should occur in the
+// constructor; this parameter defaults to true if not given.
+//
 // Jack Christensen 06Mar2013
 // https://github.com/JChristensen/DS3232RTC
 //
@@ -14,39 +23,22 @@
 
 #include <DS3232RTC.h>
 
-//define release-independent I2C functions
-#if defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
-#include <TinyWireM.h>
-#define i2cBegin TinyWireM.begin
-#define i2cBeginTransmission TinyWireM.beginTransmission
-#define i2cEndTransmission TinyWireM.endTransmission
-#define i2cRequestFrom TinyWireM.requestFrom
-#define i2cRead TinyWireM.receive
-#define i2cWrite TinyWireM.send
-#elif ARDUINO >= 100
-#include <Wire.h>
-#define i2cBegin Wire.begin
-#define i2cBeginTransmission Wire.beginTransmission
-#define i2cEndTransmission Wire.endTransmission
-#define i2cRequestFrom Wire.requestFrom
-#define i2cRead Wire.read
-#define i2cWrite Wire.write
-#else
-#include <Wire.h>
-#define i2cBegin Wire.begin
-#define i2cBeginTransmission Wire.beginTransmission
-#define i2cEndTransmission Wire.endTransmission
-#define i2cRequestFrom Wire.requestFrom
-#define i2cRead Wire.receive
-#define i2cWrite Wire.send
-#endif
-
 byte DS3232RTC::errCode;     //for debug
 
 /*----------------------------------------------------------------------*
- * Constructor.                                                         *
+ * Constructor. Initializes the I2C bus by default, but better          *
+ * practice is to pass false in the constructor and call                *
+ * the begin() function in the setup code.                              *
  *----------------------------------------------------------------------*/
-DS3232RTC::DS3232RTC()
+DS3232RTC::DS3232RTC(bool initI2C)
+{
+    if (initI2C) i2cBegin();
+}
+
+/*----------------------------------------------------------------------*
+ * Initialize the I2C bus.                                              *
+ *----------------------------------------------------------------------*/
+void DS3232RTC::begin()
 {
     i2cBegin();
 }
@@ -323,6 +315,6 @@ uint8_t __attribute__ ((noinline)) DS3232RTC::bcd2dec(uint8_t n)
     return n - 6 * (n >> 4);
 }
 
-#if defined ARDUINO_ARCH_AVR
+#ifdef ARDUINO_ARCH_AVR
 DS3232RTC RTC;      //instantiate an RTC object
 #endif

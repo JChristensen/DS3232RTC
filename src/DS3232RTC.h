@@ -6,6 +6,15 @@
 // https://playground.arduino.cc/Code/Time
 // https://github.com/PaulStoffregen/Time
 //
+// For AVR architecture, a DS3232RTC object named RTC is instantiated
+// by the library and I2C initialization occurs in the constructor;
+// this is for backwards compatibility.
+// For other architectures, the user needs to instantiate a DS3232RTC
+// object and optionally initialize the I2C bus by calling
+// DS3232RTC::begin(). The constructor has an optional bool parameter
+// to indicate whether I2C initialization should occur in the
+// constructor; this parameter defaults to true if not given.
+//
 // Jack Christensen 06Mar2013
 // https://github.com/JChristensen/DS3232RTC
 //
@@ -20,6 +29,33 @@
 #include <Arduino.h> 
 #else
 #include <WProgram.h> 
+#endif
+
+//define release-independent I2C functions
+#if defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
+#include <TinyWireM.h>
+#define i2cBegin TinyWireM.begin
+#define i2cBeginTransmission TinyWireM.beginTransmission
+#define i2cEndTransmission TinyWireM.endTransmission
+#define i2cRequestFrom TinyWireM.requestFrom
+#define i2cRead TinyWireM.receive
+#define i2cWrite TinyWireM.send
+#elif ARDUINO >= 100
+#include <Wire.h>
+#define i2cBegin Wire.begin
+#define i2cBeginTransmission Wire.beginTransmission
+#define i2cEndTransmission Wire.endTransmission
+#define i2cRequestFrom Wire.requestFrom
+#define i2cRead Wire.read
+#define i2cWrite Wire.write
+#else
+#include <Wire.h>
+#define i2cBegin Wire.begin
+#define i2cBeginTransmission Wire.beginTransmission
+#define i2cEndTransmission Wire.endTransmission
+#define i2cRequestFrom Wire.requestFrom
+#define i2cRead Wire.receive
+#define i2cWrite Wire.send
 #endif
 
 //DS3232 I2C Address
@@ -107,7 +143,8 @@ enum ALARM_TYPES_t {
 class DS3232RTC
 {
     public:
-        DS3232RTC();
+        DS3232RTC(bool initI2C = true);
+        void begin();
         static time_t get();       //must be static to work with setSyncProvider() in the Time library
         byte set(time_t t);
         static byte read(tmElements_t &tm);
@@ -130,7 +167,7 @@ class DS3232RTC
         static uint8_t bcd2dec(uint8_t n);
 };
 
-#if defined ARDUINO_ARCH_AVR
+#ifdef ARDUINO_ARCH_AVR
 extern DS3232RTC RTC;
 #endif
 
