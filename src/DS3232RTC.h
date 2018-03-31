@@ -1,5 +1,8 @@
 // Arduino DS3232RTC Library
-// DS3232RTC.h
+// https://github.com/JChristensen/DS3232RTC
+// Copyright (C) 2018 by Jack Christensen and licensed under
+// GNU GPL v3.0, https://www.gnu.org/licenses/gpl.html
+//
 // Arduino library for the Maxim Integrated DS3232 and DS3231
 // Real-Time Clocks.
 // Requires PJRC's improved version of the Arduino Time Library,
@@ -14,12 +17,6 @@
 // DS3232RTC::begin(). The constructor has an optional bool parameter
 // to indicate whether I2C initialization should occur in the
 // constructor; this parameter defaults to true if not given.
-//
-// Jack Christensen 06Mar2013
-// https://github.com/JChristensen/DS3232RTC
-//
-// "Arduino DS3232RTC Library" by Jack Christensen is licensed under
-// CC BY-SA 4.0, https://creativecommons.org/licenses/by-sa/4.0/
 
 #ifndef DS3232RTC_H_INCLUDED
 #define DS3232RTC_H_INCLUDED

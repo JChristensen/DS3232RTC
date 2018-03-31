@@ -1,18 +1,21 @@
-/*-----------------------------------------------------------------------------*
- * DS3231/DS3232 Alarm Example #4                                              *
- *                                                                             *
- * Set Alarm 1 to occur every second.                                          *
- * Detect the alarm by polling the RTC alarm flag.                             *
- *                                                                             *
- * Hardware:                                                                   *
- * Arduino Uno, DS3231 RTC.                                                    *
- * Connect RTC SDA to Arduino pin A4.                                          *
- * Connect RTC SCL to Arduino pin A5.                                          *
- *                                                                             *
- * Jack Christensen 16Sep2017                                                  *
- *-----------------------------------------------------------------------------*/
+// Arduino DS3232RTC Library
+// https://github.com/JChristensen/DS3232RTC
+// Copyright (C) 2018 by Jack Christensen and licensed under
+// GNU GPL v3.0, https://www.gnu.org/licenses/gpl.html
+//
+// DS3231/DS3232 Alarm Example Sketch #4
+//
+// Set Alarm 1 to occur every second.
+// Detect the alarm by polling the RTC alarm flag.
+//
+// Hardware:
+// Arduino Uno, DS3231 RTC.
+// Connect RTC SDA to Arduino pin A4.
+// Connect RTC SCL to Arduino pin A5.
+//
+// Jack Christensen 16Sep2017
  
-#include <DS3232RTC.h>      // http://github.com/JChristensen/DS3232RTC
+#include <DS3232RTC.h>      // https://github.com/JChristensen/DS3232RTC
 #include <Streaming.h>      // http://arduiniana.org/libraries/streaming/
 
 void setup()
@@ -29,13 +32,13 @@ void setup()
     RTC.squareWave(SQWAVE_NONE);
     
     tmElements_t tm;
-    tm.Hour = 00;           //set the RTC to an arbitrary time
+    tm.Hour = 00;           // set the RTC to an arbitrary time
     tm.Minute = 00;
     tm.Second = 00;
     tm.Day = 16;
     tm.Month = 9;
-    tm.Year = 2017 - 1970;  //tmElements_t.Year is the offset from 1970
-    RTC.write(tm);          //set the RTC from the tm structure
+    tm.Year = 2017 - 1970;  // tmElements_t.Year is the offset from 1970
+    RTC.write(tm);          // set the RTC from the tm structure
     
     // set Alarm 1 to occur once per second
     RTC.setAlarm(ALM1_EVERY_SECOND, 0, 0, 0, 0);
@@ -66,4 +69,3 @@ void printDateTime(time_t t)
     Serial << ((minute(t)<10) ? "0" : "") << _DEC(minute(t)) << ':';
     Serial << ((second(t)<10) ? "0" : "") << _DEC(second(t));
 }
-

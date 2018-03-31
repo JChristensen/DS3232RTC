@@ -1,22 +1,25 @@
-/*-----------------------------------------------------------------------------*
- * DS3231/DS3232 Alarm Example #3                                              *
- *                                                                             *
- * Set Alarm 1 to occur every 10 seconds.                                      *
- * Detect the alarm by polling the RTC alarm flag.                             *
- * Note that the RTC does not have an alarm mode for every 10 seconds, so      *
- * after an alarm occurs, we reset the alarm register to the current           *
- * time plus ten seconds.                                                      *
- *                                                                             *
- * Hardware:                                                                   *
- * Arduino Uno, DS3231 RTC.                                                    *
- * Connect RTC SDA to Arduino pin A4.                                          *
- * Connect RTC SCL to Arduino pin A5.                                          *
- *                                                                             *
- * Jack Christensen 16Sep2017                                                  *
- *-----------------------------------------------------------------------------*/
+// Arduino DS3232RTC Library
+// https://github.com/JChristensen/DS3232RTC
+// Copyright (C) 2018 by Jack Christensen and licensed under
+// GNU GPL v3.0, https://www.gnu.org/licenses/gpl.html
+//
+// DS3231/DS3232 Alarm Example Sketch #3
+//
+// Set Alarm 1 to occur every 10 seconds.
+// Detect the alarm by polling the RTC alarm flag.
+// Note that the RTC does not have an alarm mode for every 10 seconds, so
+// after an alarm occurs, we reset the alarm register to the current
+// time plus ten seconds.
+//
+// Hardware:
+// Arduino Uno, DS3231 RTC.
+// Connect RTC SDA to Arduino pin A4.
+// Connect RTC SCL to Arduino pin A5.
+//
+// Jack Christensen 16Sep2017
  
-#include <DS3232RTC.h>        //http://github.com/JChristensen/DS3232RTC
-#include <Streaming.h>        //http://arduiniana.org/libraries/streaming/
+#include <DS3232RTC.h>        // https://github.com/JChristensen/DS3232RTC
+#include <Streaming.h>        // http://arduiniana.org/libraries/streaming/
 
 const time_t ALARM_INTERVAL(10);    // alarm interval in seconds
 
@@ -81,4 +84,3 @@ void printDateTime(time_t t)
     Serial << ((minute(t)<10) ? "0" : "") << _DEC(minute(t)) << ':';
     Serial << ((second(t)<10) ? "0" : "") << _DEC(second(t));
 }
-

@@ -1,18 +1,21 @@
-/*-----------------------------------------------------------------------------*
- * DS3231/DS3232 Alarm Example #5                                              *
- *                                                                             *
- * Set Alarm 2 to occur once per minute.                                       *
- * Detect the alarm by polling the RTC alarm flag.                             *
- *                                                                             *
- * Hardware:                                                                   *
- * Arduino Uno, DS3231 RTC.                                                    *
- * Connect RTC SDA to Arduino pin A4.                                          *
- * Connect RTC SCL to Arduino pin A5.                                          *
- *                                                                             *
- * Jack Christensen 16Sep2017                                                  *
- *-----------------------------------------------------------------------------*/
- 
-#include <DS3232RTC.h>      // http://github.com/JChristensen/DS3232RTC
+// Arduino DS3232RTC Library
+// https://github.com/JChristensen/DS3232RTC
+// Copyright (C) 2018 by Jack Christensen and licensed under
+// GNU GPL v3.0, https://www.gnu.org/licenses/gpl.html
+//
+// DS3231/DS3232 Alarm Example Sketch #5
+//
+// Set Alarm 2 to occur once per minute.
+// Detect the alarm by polling the RTC alarm flag.
+//
+// Hardware:
+// Arduino Uno, DS3231 RTC.
+// Connect RTC SDA to Arduino pin A4.
+// Connect RTC SCL to Arduino pin A5.
+//
+// Jack Christensen 16Sep2017
+
+#include <DS3232RTC.h>      // https://github.com/JChristensen/DS3232RTC
 #include <Streaming.h>      // http://arduiniana.org/libraries/streaming/
 
 void setup()
@@ -66,4 +69,3 @@ void printDateTime(time_t t)
     Serial << ((minute(t)<10) ? "0" : "") << _DEC(minute(t)) << ':';
     Serial << ((second(t)<10) ? "0" : "") << _DEC(second(t));
 }
-

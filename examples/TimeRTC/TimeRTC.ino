@@ -1,13 +1,13 @@
-/*
- * TimeRTC.pde
- * Example code illustrating Time library with Real Time Clock.
- * This example is identical to the example provided with the Time Library,
- * only the #include statement has been changed to include the DS3232RTC library.
- */
+// Arduino DS3232RTC Library
+// https://github.com/JChristensen/DS3232RTC
+//
+// Example sketch illustrating Time library with Real Time Clock.
+// This example is identical to the example provided with the Time Library,
+// only the #include statement has been changed to include the DS3232RTC library.
 
-#include <DS3232RTC.h>    //http://github.com/JChristensen/DS3232RTC
+#include <DS3232RTC.h>      // https://github.com/JChristensen/DS3232RTC
 
-void setup(void)
+void setup()
 {
     Serial.begin(9600);
     setSyncProvider(RTC.get);   // the function to get the time from the RTC
@@ -17,13 +17,13 @@ void setup(void)
         Serial.println("RTC has set the system time");      
 }
 
-void loop(void)
+void loop()
 {
     digitalClockDisplay();  
     delay(1000);
 }
 
-void digitalClockDisplay(void)
+void digitalClockDisplay()
 {
     // digital clock display of the time
     Serial.print(hour());

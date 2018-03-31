@@ -1,9 +1,17 @@
 # Arduino DS3232RTC Library
 https://github.com/JChristensen/DS3232RTC  
 README file  
-Jack Christensen Mar 2013
+Jack Christensen  
+Mar 2013
 
-![CC BY-SA](http://mirrors.creativecommons.org/presskit/buttons/80x15/png/by-sa.png)
+## License
+Arduino DS3232RTC Library Copyright (C) 2018 Jack Christensen GNU GPL v3.0
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License v3.0 as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/gpl.html>
 
 ## Introduction
 **DS3232RTC** is an Arduino library that supports the Maxim Integrated DS3232 and DS3231 Real-Time Clocks. This library is intended to be used with [PJRC's Arduino Time library](https://github.com/PaulStoffregen/Time).
@@ -11,8 +19,6 @@ Jack Christensen Mar 2013
 The **DS3232RTC** library is a drop-in replacement for the (older) DS1307RTC.h library by Michael Margolis that is supplied with the [Arduino Time library](https://www.arduino.cc/playground/Code/Time) (but not for [PJRC's newer version of the DS1307RTC library](https://www.pjrc.com/teensy/td_libs_DS1307RTC.html)). To change from using a DS1307 RTC to an DS323x RTC, it is only necessary to use `#include <DS3232RTC.h>` instead of `#include <DS1307RTC.h>`.
 
 **DS3232RTC** also implements functions to support the additional features of the DS3232 and DS3231. The DS3231 has the same features as the DS3232 except: (1) Battery-backed SRAM, (2) Battery-backed 32kHz output (BB32kHz bit in Control/Status register 0x0F), and (3) Adjustable temperature sensor sample rate (CRATE1:0 bits in the Control/Status register).
-
-"Arduino DS3232RTC Library" by Jack Christensen is licensed under CC BY-SA 4.0.
 
 ## Examples
 The following example sketches are included with the **DS3232RTC** library:
@@ -26,12 +32,10 @@ The following example sketches are included with the **DS3232RTC** library:
 
 When using the **DS3232RTC** library, the user is responsible for ensuring that reads and writes do not exceed the device's address space (0x00-0x12 for DS3231, 0x00-0xFF for DS3232); no bounds checking is done by the library.            
 
-Similar to the **DS1307RTC** library, the **DS3232RTC** library instantiates an RTC object; the user does not need to do this.
-
 ## Enumerations
 ### SQWAVE_FREQS_t
 ##### Description
-Symbolic names used with the squareWave() method (described below).
+Symbolic names used with the squareWave() function (described below).
 ##### Values
 - SQWAVE_NONE
 - SQWAVE_1_HZ
@@ -41,7 +45,7 @@ Symbolic names used with the squareWave() method (described below).
 
 ### ALARM_TYPES_t
 ##### Description
-Symbolic names used with the setAlarm() method (described below).
+Symbolic names used with the setAlarm() function (described below).
 ##### Values for Alarm 1
 - ALM1_EVERY_SECOND -- causes an alarm once per second.
 - ALM1_MATCH_SECONDS -- causes an alarm when the seconds match (i.e. once per minute).
@@ -57,9 +61,42 @@ Symbolic names used with the setAlarm() method (described below).
 - ALM2_MATCH_DATE -- causes an alarm when the date of the month *and* hours *and* minutes match.
 - ALM2_MATCH_DAY -- causes an alarm when the day of the week *and* hours *and* minutes match.
 
+## Constructor
+### DS3232RTC(bool initI2C)
+##### Description
+For AVR architecture only (for backwards compatibility with the **DS1307RTC** library), the **DS3232RTC** library instantiates a DS3232RTC object named `RTC`; the user should not use the constructor for AVR boards. For other architectures, the user's code must instantiate a DS3232RTC object.
+##### Syntax
+`DS3232RTC myRTC(initI2C);`
+##### Parameters
+**initI2C:** An optional parameter to control whether the constructor initializes the I2C bus. The default is true (again for backwards compatibility). *(bool)*
+##### Returns
+None.
+##### Example
+```c++
+// For non-AVR boards only. Not needed for AVR boards.
+DS3232RTC myRTC(false);     // tell constructor not to initialize the I2C bus.
+```
 
-## Methods for setting and reading the time
+## Initialization function
+### begin()
+##### Description
+Initializes the I2C bus. For use with non-AVR architectures where the user has instantiated a DS3232RTC object and specified no initialization in the constructor (see above).
+##### Syntax
+`begin();`
+##### Parameters
+None.
+##### Returns
+None.
+##### Example
+```c++
+// For non-AVR boards only. Not needed for AVR boards.
+DS3232RTC myRTC(false);     // tell constructor not to initialize the I2C bus.
+void setup() {
+    myRTC.begin();          // initialize the I2C bus here.
+}
+```
 
+## Functions for setting and reading the time
 ### get(void)
 ##### Description
 Reads the current date and time from the RTC and returns it as a *time_t* value. Returns zero if an I2C error occurs (RTC not present, etc.).
@@ -134,7 +171,7 @@ tm.Year = 2009 - 1970;    //tmElements_t.Year is the offset from 1970
 RTC.write(tm);            //set the RTC from the tm structure
 ```
 
-## Methods for reading and writing RTC registers or static RAM (SRAM) for the DS3232
+## Functions for reading and writing RTC registers or static RAM (SRAM) for the DS3232
 The DS3232RTC.h file defines symbolic names for the timekeeping, alarm, status and control registers. These can be used for the addr argument in the functions below.
 
 ### writeRTC(byte addr, byte *values, byte nBytes)
@@ -203,12 +240,12 @@ byte val;
 val = RTC.readRTC(3);  //read the value from SRAM location 3
 ```
 
-## Alarm methods
+## Alarm functions
 The DS3232 and DS3231 have two alarms. Alarm1 can be set to seconds precision; Alarm2 can only be set to minutes precision.
 
 ### setAlarm(ALARM_TYPES_t alarmType, byte seconds, byte minutes, byte hours, byte daydate)
 ##### Description
-Set an alarm time. Sets the alarm registers only.  To cause the INT pin to be asserted on alarm match, use alarmInterrupt(). This method can set either Alarm 1 or Alarm 2, depending on the value of alarmType (use the ALARM_TYPES_t enumeration above). When setting Alarm 2, the seconds value must be supplied but is ignored, recommend using zero. (Alarm 2 has no seconds register.)
+Set an alarm time. Sets the alarm registers only.  To cause the INT pin to be asserted on alarm match, use alarmInterrupt(). This function can set either Alarm 1 or Alarm 2, depending on the value of alarmType (use the ALARM_TYPES_t enumeration above). When setting Alarm 2, the seconds value must be supplied but is ignored, recommend using zero. (Alarm 2 has no seconds register.)
 
 ##### Syntax
 `RTC.setAlarm(alarmType, seconds, minutes, hours, dayOrDate);`
@@ -228,7 +265,7 @@ RTC.setAlarm(ALM1_MATCH_DAY, 56, 34, 12, dowSunday);
 
 ### setAlarm(ALARM_TYPES_t alarmType, byte minutes, byte hours, byte daydate)
 ##### Description
-Set an alarm time. Sets the alarm registers only.  To cause the INT pin to be asserted on alarm match, use alarmInterrupt().  This method can set either Alarm 1 or Alarm 2, depending on the value of alarmType (use the ALARM_TYPES_t enumeration above). However, when using this method to set Alarm 1, the seconds value is set to zero. (Alarm 2 has no seconds register.)
+Set an alarm time. Sets the alarm registers only.  To cause the INT pin to be asserted on alarm match, use alarmInterrupt().  This functiuon can set either Alarm 1 or Alarm 2, depending on the value of alarmType (use the ALARM_TYPES_t enumeration above). However, when using this function to set Alarm 1, the seconds value is set to zero. (Alarm 2 has no seconds register.)
 
 ##### Syntax
 `RTC.setAlarm(alarmType, minutes, hours, dayOrDate);`
@@ -281,7 +318,7 @@ else {
 }
 ```
 
-## Other methods
+## Other function
 ### temperature(void)
 ##### Description
 Returns the RTC temperature.
