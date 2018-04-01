@@ -16,7 +16,7 @@
 // Connect RTC INT/SQW to Arduino pin 2.
 //
 // Jack Christensen 16Sep2017
- 
+
 #include <DS3232RTC.h>        // https://github.com/JChristensen/DS3232RTC
 #include <Streaming.h>        // http://arduiniana.org/libraries/streaming/
 
@@ -36,7 +36,7 @@ void setup()
     RTC.alarmInterrupt(ALARM_1, false);
     RTC.alarmInterrupt(ALARM_2, false);
     RTC.squareWave(SQWAVE_NONE);
-    
+
     tmElements_t tm;
     tm.Hour = 00;               // set the RTC to an arbitrary time
     tm.Minute = 00;
@@ -45,7 +45,7 @@ void setup()
     tm.Month = 9;
     tm.Year = 2017 - 1970;      // tmElements_t.Year is the offset from 1970
     RTC.write(tm);              // set the RTC from the tm structure
-    
+
     // set Alarm 1 to occur at 5 seconds after every minute
     RTC.setAlarm(ALM1_MATCH_SECONDS, 5, 0, 0, 0);
     // clear the alarm flag

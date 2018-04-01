@@ -17,7 +17,7 @@
 // Connect RTC SCL to Arduino pin A5.
 //
 // Jack Christensen 16Sep2017
- 
+
 #include <DS3232RTC.h>        // https://github.com/JChristensen/DS3232RTC
 #include <Streaming.h>        // http://arduiniana.org/libraries/streaming/
 
@@ -45,11 +45,11 @@ void setup()
     tm.Year = 2017 - 1970;          // tmElements_t.Year is the offset from 1970
     time_t t = makeTime(tm);        // change the tm structure into time_t (seconds since epoch)
     time_t alarmTime = t + ALARM_INTERVAL;    // calculate the alarm time
-    
+
     // set the current time
     RTC.set(t);
     // set the alarm
-    RTC.setAlarm(ALM1_MATCH_HOURS, second(alarmTime), minute(alarmTime), hour(alarmTime), 0);    
+    RTC.setAlarm(ALM1_MATCH_HOURS, second(alarmTime), minute(alarmTime), hour(alarmTime), 0);
     // clear the alarm flag
     RTC.alarm(ALARM_1);
 
@@ -68,7 +68,7 @@ void loop()
         // calculate the next alarm time
         time_t alarmTime = t + ALARM_INTERVAL;
         // set the alarm
-        RTC.setAlarm(ALM1_MATCH_HOURS, second(alarmTime), minute(alarmTime), hour(alarmTime), 0);    
+        RTC.setAlarm(ALM1_MATCH_HOURS, second(alarmTime), minute(alarmTime), hour(alarmTime), 0);
 
         Serial << millis() << " ALARM_1 ";
         printDateTime(t);

@@ -21,7 +21,7 @@
 void setup()
 {
     Serial.begin(115200);
-    
+
     // initialize the alarms to known values, clear the alarm flags, clear the alarm interrupt flags
     RTC.setAlarm(ALM1_MATCH_DATE, 0, 0, 0, 1);
     RTC.setAlarm(ALM2_MATCH_DATE, 0, 0, 0, 1);
@@ -33,7 +33,7 @@ void setup()
 
     // set the RTC time and date to the compile time
     RTC.set(compileTime());
-    
+
     // set Alarm 1 to occur at 5 seconds after every minute
     RTC.setAlarm(ALM1_MATCH_SECONDS, 5, 0, 0, 1);
     // clear the alarm flag

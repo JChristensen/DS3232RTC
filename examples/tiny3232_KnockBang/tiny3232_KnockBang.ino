@@ -23,7 +23,7 @@
 void setup()
 {
     Debug.begin(250000);
-    
+
     // setSyncProvider() causes the Time library to synchronize with the
     // external RTC by calling RTC.get() every five minutes by default.
     setSyncProvider(RTC.get);

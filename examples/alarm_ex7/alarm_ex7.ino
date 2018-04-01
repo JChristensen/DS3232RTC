@@ -27,7 +27,7 @@ void setup()
 {
     Serial.begin(115200);
     pinMode(2, INPUT_PULLUP);
-    
+
     // initialize the alarms to known values, clear the alarm flags, clear the alarm interrupt flags
     RTC.setAlarm(ALM1_MATCH_DATE, 0, 0, 0, 1);
     RTC.setAlarm(ALM2_MATCH_DATE, 0, 0, 0, 1);
@@ -36,7 +36,7 @@ void setup()
     RTC.alarmInterrupt(ALARM_1, false);
     RTC.alarmInterrupt(ALARM_2, false);
     RTC.squareWave(SQWAVE_NONE);
-        
+
     tmElements_t tm;
     tm.Hour = 06;               // set the RTC time to 06:29:50
     tm.Minute = 29;
@@ -45,7 +45,7 @@ void setup()
     tm.Month = 9;
     tm.Year = 2017 - 1970;      // tmElements_t.Year is the offset from 1970
     RTC.write(tm);              // set the RTC from the tm structure
-    
+
     // set Alarm 2 for 06:30:00
     RTC.setAlarm(ALM2_MATCH_HOURS, 0, 30, 6, 0);
     // clear the alarm flags
