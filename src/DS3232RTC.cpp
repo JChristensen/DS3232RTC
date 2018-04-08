@@ -18,12 +18,6 @@
 // to indicate whether I2C initialization should occur in the
 // constructor; this parameter defaults to true if not given.
 
-#if defined(ARDUINO) && ARDUINO >= 100
-#include <Arduino.h>
-#else
-#include <WProgram.h>
-#endif
-
 // define release-independent I2C functions
 #if defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
 #include <TinyWireM.h>
