@@ -358,6 +358,14 @@ int DS3232RTC::temperature()
     return rtcTemp.i / 64;
 }
 
+// Returns the temperature in Celsius as a float
+float DS3232RTC::temperatureCelsius()
+{
+    float tempDecimal = readRTC(RTC_TEMP_LSB);
+    float tempWhole = readRTC(RTC_TEMP_MSB);
+    return tempWhole + (tempDecimal / 256.0);
+}
+
 // Decimal-to-BCD conversion
 uint8_t DS3232RTC::dec2bcd(uint8_t n)
 {
