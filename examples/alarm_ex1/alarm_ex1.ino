@@ -74,7 +74,7 @@ void printDateTime(time_t t)
 time_t compileTime()
 {
     const time_t FUDGE(10);    //fudge factor to allow for upload time, etc. (seconds, YMMV)
-    char *compDate = __DATE__, *compTime = __TIME__, *months = "JanFebMarAprMayJunJulAugSepOctNovDec";
+    const char *compDate = __DATE__, *compTime = __TIME__, *months = "JanFebMarAprMayJunJulAugSepOctNovDec";
     char compMon[3], *m;
 
     strncpy(compMon, compDate, 3);
