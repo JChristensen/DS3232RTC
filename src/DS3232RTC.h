@@ -21,6 +21,7 @@
 #ifndef DS3232RTC_H_INCLUDED
 #define DS3232RTC_H_INCLUDED
 
+#include <Arduino.h>
 #include <TimeLib.h>        // https://github.com/PaulStoffregen/Time
 
 // Alarm masks
