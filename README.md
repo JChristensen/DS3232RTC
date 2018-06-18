@@ -282,14 +282,14 @@ None.
 RTC.setAlarm(ALM2_MATCH_DATE, 34, 12, 4);
 ```
 
-### alarmInterrupt(byte alarmNumber, boolean alarmEnabled)
+### alarmInterrupt(byte alarmNumber, bool alarmEnabled)
 ##### Description
 Enable or disable an alarm "interrupt". Note that this "interrupt" just causes the RTC's INT pin to be asserted. To use this signal as an actual interrupt to (for example) a microcontroller, the RTC "interrupt" pin needs to be connected to the microcontroller and the microcontroller application firmware must properly configure the interrupt and also provide for handling it.  
 ##### Syntax
 `RTC.alarmInterrupt(alarmNumber, enable);`
 ##### Parameters
 **alarmNumber:** The number of the alarm to enable or disable, ALARM_1 or ALARM_2 *(byte)*  
-**alarmEnabled:** true or false *(boolean)*  
+**alarmEnabled:** true or false *(bool)*  
 ##### Returns
 None.
 ##### Example
@@ -317,7 +317,7 @@ else {
 }
 ```
 
-## Other function
+## Other functions
 ### temperature(void)
 ##### Description
 Returns the RTC temperature.
