@@ -284,8 +284,7 @@ RTC.setAlarm(ALM2_MATCH_DATE, 34, 12, 4);
 
 ### alarmInterrupt(byte alarmNumber, boolean alarmEnabled)
 ##### Description
-Enable or disable an alarm "interrupt". Note that this "interrupt" causes the RTC's INT pin to be asserted. To use this signal as an actual interrupt to a microcontroller, it will need to be connected properly and programmed in the application firmware.
-on the RTC.   
+Enable or disable an alarm "interrupt". Note that this "interrupt" just causes the RTC's INT pin to be asserted. To use this signal as an actual interrupt to (for example) a microcontroller, the RTC "interrupt" pin needs to be connected to the microcontroller and the microcontroller application firmware must properly configure the interrupt and also provide for handling it.  
 ##### Syntax
 `RTC.alarmInterrupt(alarmNumber, enable);`
 ##### Parameters
