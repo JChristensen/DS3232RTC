@@ -76,9 +76,12 @@ class DS3232RTC
     private:
         uint8_t dec2bcd(uint8_t n);
         static uint8_t bcd2dec(uint8_t n);
+        #ifdef __STM32F1__
+          static bool _do_init;
+        #endif        
 };
 
-#ifdef ARDUINO_ARCH_AVR
+#if defined(ARDUINO_ARCH_AVR) || defined(__STM32F1__)
 extern DS3232RTC RTC;
 #endif
 
