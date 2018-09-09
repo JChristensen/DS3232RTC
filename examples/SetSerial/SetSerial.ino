@@ -28,18 +28,17 @@
 // Jack Christensen 08Aug2013
 
 #include <DS3232RTC.h>      // https://github.com/JChristensen/DS3232RTC
-#include <Streaming.h>      // http://arduiniana.org/libraries/streaming/
 
 void setup()
 {
-    Serial.begin(115200);
+    Serial.begin(9600);
 
     // setSyncProvider() causes the Time library to synchronize with the
     // external RTC by calling RTC.get() every five minutes by default.
     setSyncProvider(RTC.get);
-    Serial << F("RTC Sync");
-    if (timeStatus() != timeSet) Serial << F(" FAIL!");
-    Serial << endl;
+    Serial.println("RTC Sync");
+    if (timeStatus() != timeSet)
+        Serial.println(" FAIL!");
 }
 
 void loop()
@@ -48,14 +47,14 @@ void loop()
     time_t t;
     tmElements_t tm;
 
-    // check for input to set the RTC, minimum length is 12, i.e. yy,m,d,h,m,s
+    // Check for input to set the RTC, minimum length is 12, i.e. yy,m,d,h,m,s
     if (Serial.available() >= 12) {
-        // note that the tmElements_t Year member is an offset from 1970,
+        // Note that the tmElements_t Year member is an offset from 1970,
         // but the RTC wants the last two digits of the calendar year.
-        // use the convenience macros from the Time Library to do the conversions.
+        // Use the convenience macros from the Time Library to do the conversions.
         int y = Serial.parseInt();
         if (y >= 100 && y < 1000)
-            Serial << F("Error: Year must be two digits or four digits!") << endl;
+            Serial.println("Error: Year must be two digits or four digits!");
         else {
             if (y >= 1000)
                 tm.Year = CalendarYrToTm(y);
@@ -69,24 +68,28 @@ void loop()
             t = makeTime(tm);
             RTC.set(t);        // use the time_t value to ensure correct weekday is set
             setTime(t);
-            Serial << F("RTC set to: ");
+            Serial.print("RTC set to: ");
             printDateTime(t);
-            Serial << endl;
+            Serial.println();
             // dump any extraneous input
             while (Serial.available() > 0) Serial.read();
         }
     }
 
     t = now();
-    if (t != tLast) {
+    if (t != tLast) { //Every second:
         tLast = t;
-        printDateTime(t);
-        if (second(t) == 0) {
-            float c = RTC.temperature() / 4.;
+        printDateTime(t);      //Print the Date and Time
+        if (second(t) == 0) {         //Every minute:
+            float c = RTC.temperature() / 4.; //Print the temperature
             float f = c * 9. / 5. + 32.;
-            Serial << F("  ") << c << F(" C  ") << f << F(" F");
+            Serial.print("  "); 
+            Serial.print(c); 
+            Serial.print(" C  "); 
+            Serial.print(f); 
+            Serial.print(" F");
         }
-        Serial << endl;
+        Serial.println();
     }
 }
 
@@ -94,7 +97,7 @@ void loop()
 void printDateTime(time_t t)
 {
     printDate(t);
-    Serial << ' ';
+    Serial.print(" ");
     printTime(t);
 }
 
@@ -110,7 +113,10 @@ void printTime(time_t t)
 void printDate(time_t t)
 {
     printI00(day(t), 0);
-    Serial << monthShortStr(month(t)) << _DEC(year(t));
+    Serial.print(' ');
+    Serial.print(monthShortStr(month(t)));
+    Serial.print(' ');
+    Serial.print(year(t));
 }
 
 // Print an integer in "00" format (with leading zero),
@@ -118,8 +124,10 @@ void printDate(time_t t)
 // Input value assumed to be between 0 and 99.
 void printI00(int val, char delim)
 {
-    if (val < 10) Serial << '0';
-    Serial << _DEC(val);
-    if (delim > 0) Serial << delim;
+    if (val < 10)
+        Serial.print('0');
+    Serial.print(val);
+    if (delim > 0) 
+        Serial.print(delim);
     return;
 }
