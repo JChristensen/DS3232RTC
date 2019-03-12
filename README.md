@@ -18,7 +18,12 @@ You should have received a copy of the GNU General Public License along with thi
 
 The **DS3232RTC** library is a drop-in replacement for the (older) DS1307RTC.h library by Michael Margolis that is supplied with the [Arduino Time library](https://www.arduino.cc/playground/Code/Time) (but not for [PJRC's newer version of the DS1307RTC library](https://www.pjrc.com/teensy/td_libs_DS1307RTC.html)). To change from using a DS1307 RTC to an DS323x RTC, it is only necessary to use `#include <DS3232RTC.h>` instead of `#include <DS1307RTC.h>`.
 
-**DS3232RTC** also implements functions to support the additional features of the DS3232 and DS3231. The DS3231 has the same features as the DS3232 except: (1) Battery-backed SRAM, (2) Battery-backed 32kHz output (BB32kHz bit in Control/Status register 0x0F), and (3) Adjustable temperature sensor sample rate (CRATE1:0 bits in the Control/Status register).
+The **DS3232RTC** library also implements functions to support the additional features of the DS3232 and DS3231. The DS3232 has the same features as the DS3231, but the DS3232 also has these extra features:
+
+- Battery-backed SRAM
+- Battery-backed 32kHz output (BB32kHz bit in Control/Status register 0x0F)
+- Adjustable temperature sensor sample rate (CRATE1:0 bits in the Control/Status register).
+
 
 ## Examples
 The following example sketches are included with the **DS3232RTC** library:
