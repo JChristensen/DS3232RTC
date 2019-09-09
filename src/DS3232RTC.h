@@ -70,7 +70,7 @@ class DS3232RTC
         bool alarm(byte alarmNumber);
         void squareWave(SQWAVE_FREQS_t freq);
         bool oscStopped(bool clearOSF = false);
-        int temperature();
+        int16_t temperature();
         static byte errCode;
 
     private:
