@@ -3,15 +3,15 @@
 // Copyright (C) 2018 by Jack Christensen and licensed under
 // GNU GPL v3.0, https://www.gnu.org/licenses/gpl.html
 //
-// Example sketch to use a 1Hz interrupt from the DS3231 to keep time.
+// Example sketch that uses a 1Hz interrupt from the DS3231/2 to keep time.
 // This is an alternative to using the "setSyncProvider" function from
 // the Time library to periodically sync the MCU's time with the RTC.
 //
 // Periodic synchronization will cause discontinuities in the MCU's perceived
 // time of day. Depending on the relative frequency of the MCU's clock compared to
-// the RTC, when synchronization occurs, a second according to the MCU's time
-// of day may appear to be longer or shorter than one second. Alternately, the
-// MCU's time of day could jump backwards or forward by more than a second.
+// that of the RTC, when synchronization occurs, a second according to the MCU's
+// time may appear to be longer or shorter than one RTC second. Alternately, the
+// MCU's time could jump backwards, or forward by more than a second.
 //
 // While this method requires setting up an interrupt and a few short
 // functions to handle the interrupt and to set and read the time,
@@ -19,10 +19,10 @@
 // in step with the RTC time and is not dependent on the MCU's clock
 // which will always drift relative to the RTC, and (2) It is more efficient
 // as the RTC's time is only read once over the I2C bus and the interrupt
-// service routine to increment the time is minimal.
+// service routine to increment the time is trivial.
 //
-// When using the technique of periodically synchronizing the MCU's time
-// with the RTC, we have 
+// When using setSyncProvider and periodically synchronizing the MCU's time
+// with the RTC, we effectively have two clocks instead of one.
 //
 // Jack Christensen 27Dec2018
 
