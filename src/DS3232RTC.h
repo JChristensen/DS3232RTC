@@ -51,6 +51,9 @@ enum SQWAVE_FREQS_t {
 #define ALARM_1 1                  // constants for alarm functions
 #define ALARM_2 2
 
+#define BBSQW_ON true
+#define BBSQW_OFF false
+
 class DS3232RTC
 {
     public:
@@ -72,6 +75,7 @@ class DS3232RTC
         bool oscStopped(bool clearOSF = false);
         int16_t temperature();
         static byte errCode;
+        byte bbsqw(bool on);
 
     private:
         uint8_t dec2bcd(uint8_t n);

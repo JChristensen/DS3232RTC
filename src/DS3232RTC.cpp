@@ -370,6 +370,26 @@ uint8_t __attribute__ ((noinline)) DS3232RTC::bcd2dec(uint8_t n)
     return n - 6 * (n >> 4);
 }
 
+/**
+ * Sets BBSQW bit which allows to generate alarm interruptions while
+ * device is running on battery.
+ *
+ * Function accepts `on` parameter that can have values `BBSQW_ON` or
+ * `BBSQW_OFF` and returns zero, if setting up was successfull.
+ */
+byte DS3232RTC::bbsqw(bool on) {
+    byte rtc_control = readRTC(RTC_CONTROL);
+    if(on) {
+        rtc_control |= _BV(BBSQW);
+    }
+    else {
+        rtc_control &= ~_BV(BBSQW);
+    }
+    byte status = writeRTC(RTC_CONTROL, rtc_control);
+    return status;
+}
+
+
 #ifdef ARDUINO_ARCH_AVR
 DS3232RTC RTC;      // instantiate an RTC object
 #endif
