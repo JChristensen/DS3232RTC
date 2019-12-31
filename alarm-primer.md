@@ -54,7 +54,7 @@ Sets Alarm 1 to occur once per minute at five seconds after the minute. Detects 
 Sets Alarm 1 to occur once a minute at 5 seconds after the minute. Configures the RTC INT/SQW pin to be asserted when alarm match occurs. Detects the alarm by polling the INT/SQW pin.
 
 ### alarm_ex3
-Sets Alarm 1 to occur every 10 seconds. Detects the alarm by polling the RTC alarm flag. Note that the RTC does not have an alarm mode for every 10 seconds, so after an alarm occurs, we reset the alarm register to the current         time plus ten seconds.
+Sets Alarm 1 to occur every 10 seconds. Detects the alarm by polling the RTC alarm flag. Note that the RTC does not have an alarm mode for every 10 seconds, so after an alarm occurs, we reset the alarm register to the current time plus ten seconds.
 
 ### alarm_ex4
 Set Alarm 1 to occur every second. Detects the alarm by polling the RTC alarm flag.
@@ -67,3 +67,6 @@ Sets Alarm 1 for 20 seconds after each minute and Alarm 2 for each minute (at 00
 
 ### alarm_ex7
 Sets Alarm 2 for a specific time of day, hh:mm. Configures the RTC INT/SQW pin to be asserted when alarm match occurs. Detects the alarm by polling the INT/SQW pin.
+
+### alarm_ex8
+Set both alarms to occur once per day at different times. Configure the RTC INT/SQW pin to be asserted when alarm match occurs. Detect the alarms by polling the INT/SQW pin. Assumes the RTC time is already set.
