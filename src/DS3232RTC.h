@@ -68,6 +68,8 @@ class DS3232RTC
         void setAlarm(ALARM_TYPES_t alarmType, byte minutes, byte hours, byte daydate);
         void alarmInterrupt(byte alarmNumber, bool alarmEnabled);
         bool alarm(byte alarmNumber);
+        bool checkAlarm(byte alarmNumber);
+        bool clearAlarm(byte alarmNumber);
         void squareWave(SQWAVE_FREQS_t freq);
         bool oscStopped(bool clearOSF = false);
         int16_t temperature();

@@ -296,20 +296,39 @@ void DS3232RTC::alarmInterrupt(byte alarmNumber, bool interruptEnabled)
 // triggered, and resets the alarm flag bit.
 bool DS3232RTC::alarm(byte alarmNumber)
 {
-    uint8_t statusReg, mask;
-
-    statusReg = readRTC(RTC_STATUS);
-    mask = _BV(A1F) << (alarmNumber - 1);
-    if (statusReg & mask)
-    {
+    uint8_t statusReg = readRTC(RTC_STATUS);
+    uint8_t mask = _BV(A1F) << (alarmNumber - 1);
+    if (statusReg & mask) {
         statusReg &= ~mask;
         writeRTC(RTC_STATUS, statusReg);
         return true;
     }
-    else
-    {
+    else {
         return false;
     }
+}
+
+// Returns true or false depending on whether the given alarm has been
+// triggered, without resetting the alarm flag bit.
+bool DS3232RTC::checkAlarm(byte alarmNumber)
+{
+    uint8_t statusReg = readRTC(RTC_STATUS);
+    uint8_t mask = _BV(A1F) << (alarmNumber - 1);
+    return (statusReg & mask);
+}
+
+// Clears the given alarm flag bit if it is set.
+// Returns the value of the flag bit before if was cleared.
+bool DS3232RTC::clearAlarm(byte alarmNumber)
+{
+    uint8_t statusReg = readRTC(RTC_STATUS);
+    uint8_t mask = _BV(A1F) << (alarmNumber - 1);
+    bool retVal = statusReg & mask;
+    if (retVal) {
+        statusReg &= ~mask;
+        writeRTC(RTC_STATUS, statusReg);
+    }
+    return retVal;
 }
 
 // Enable or disable the square wave output.

@@ -311,11 +311,49 @@ Tests whether an alarm has been triggered. If the alarm was triggered, returns t
 ##### Parameters
 **alarmNumber:** The number of the alarm to test, ALARM_1 or ALARM_2 *(byte)*  
 ##### Returns
-Description *(type)*
+Value of the alarm flag bit *(bool)*
 ##### Example
 ```c++
 if ( RTC.alarm(ALARM_1) ) {		//has Alarm1 triggered?
 	//yes, act on the alarm
+}
+else {
+	//no alarm
+}
+```
+
+### checkAlarm(byte alarmNumber)
+##### Description
+Tests whether an alarm has been triggered. If the alarm was triggered, returns true, else returns false. The alarm flag is not reset.
+##### Syntax
+`RTC.checkAlarm(alarmNumber);`
+##### Parameters
+**alarmNumber:** The number of the alarm to test, ALARM_1 or ALARM_2 *(byte)*  
+##### Returns
+Value of the alarm flag bit *(bool)*
+##### Example
+```c++
+if ( RTC.checkAlarm(ALARM_1) ) {		//has Alarm1 triggered?
+	//yes, act on the alarm
+}
+else {
+	//no alarm
+}
+```
+### clearAlarm(byte alarmNumber)
+##### Description
+Clears the given alarm flag bit.
+##### Syntax
+`RTC.clearAlarm(alarmNumber);`
+##### Parameters
+**alarmNumber:** The number of the alarm to test, ALARM_1 or ALARM_2 *(byte)*  
+##### Returns
+Value of the alarm flag bit, before it was cleared *(bool)*
+##### Example
+```c++
+if ( RTC.checkAlarm(ALARM_1) ) {		//has Alarm1 triggered?
+    //yes, act on the alarm
+	RTC.clearAlarm(ALARM_1);           //clear the alarm flag
 }
 else {
 	//no alarm

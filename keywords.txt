@@ -9,6 +9,8 @@ readRTC	KEYWORD2
 setAlarm	KEYWORD2
 alarmInterrupt	KEYWORD2
 alarm	KEYWORD2
+checkAlarm	KEYWORD2
+clearAlarm	KEYWORD2
 squareWave	KEYWORD2
 oscStopped	KEYWORD2
 temperature	KEYWORD2
