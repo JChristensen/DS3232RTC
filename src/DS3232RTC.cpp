@@ -30,7 +30,11 @@
 #elif ARDUINO >= 100
 #include <Wire.h>
 #define i2cBegin Wire.begin
-#define i2cBeginTransmission Wire.beginTransmission
+  #ifdef __STM32F1__
+    #define i2cBeginTransmission if (_do_init) { _do_init = false; Wire.begin(); } Wire.beginTransmission
+  #else
+    #define i2cBeginTransmission Wire.beginTransmission
+  #endif
 #define i2cEndTransmission Wire.endTransmission
 #define i2cRequestFrom Wire.requestFrom
 #define i2cRead Wire.read
@@ -116,7 +120,10 @@ byte DS3232RTC::errCode;           // for debug
 // the begin() function in the setup code.
 DS3232RTC::DS3232RTC(bool initI2C)
 {
-    if (initI2C) i2cBegin();
+    // At the moment, Arduino for STM32 (STM32duino) doesn't support GPIO or SPI etc operations inside constructors.
+    #ifndef __STM32F1__
+      if (initI2C) i2cBegin();
+    #endif
 }
 
 // Initialize the I2C bus.
@@ -389,6 +396,10 @@ uint8_t __attribute__ ((noinline)) DS3232RTC::bcd2dec(uint8_t n)
     return n - 6 * (n >> 4);
 }
 
-#ifdef ARDUINO_ARCH_AVR
+#if defined(ARDUINO_ARCH_AVR) || defined(__STM32F1__)
 DS3232RTC RTC;      // instantiate an RTC object
+#endif
+
+#ifdef __STM32F1__
+  bool DS3232RTC::_do_init = true;
 #endif
