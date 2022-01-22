@@ -28,15 +28,19 @@
 // Jack Christensen 08Aug2013
 
 #include <DS3232RTC.h>      // https://github.com/JChristensen/DS3232RTC
-#include <Streaming.h>      // http://arduiniana.org/libraries/streaming/
+#include <Streaming.h>      // https://github.com/janelia-arduino/Streaming
+
+DS3232RTC myRTC;
 
 void setup()
 {
     Serial.begin(115200);
-
+    Serial << F( "\n" __FILE__ "\n" __DATE__ " " __TIME__ "\n" );
+    myRTC.begin();
+    
     // setSyncProvider() causes the Time library to synchronize with the
     // external RTC by calling RTC.get() every five minutes by default.
-    setSyncProvider(RTC.get);
+    setSyncProvider(myRTC.get);
     Serial << F("RTC Sync");
     if (timeStatus() != timeSet) Serial << F(" FAIL!");
     Serial << endl;
@@ -67,7 +71,7 @@ void loop()
             tm.Minute = Serial.parseInt();
             tm.Second = Serial.parseInt();
             t = makeTime(tm);
-            RTC.set(t);        // use the time_t value to ensure correct weekday is set
+            myRTC.set(t);   // use the time_t value to ensure correct weekday is set
             setTime(t);
             Serial << F("RTC set to: ");
             printDateTime(t);
@@ -82,7 +86,7 @@ void loop()
         tLast = t;
         printDateTime(t);
         if (second(t) == 0) {
-            float c = RTC.temperature() / 4.;
+            float c = myRTC.temperature() / 4.;
             float f = c * 9. / 5. + 32.;
             Serial << F("  ") << c << F(" C  ") << f << F(" F");
         }

@@ -92,7 +92,7 @@ void loop()
             break;
 
         case LED_ON:
-            if (RTC.checkAlarm(ALARM_2)) {      // time to turn on?
+            if (RTC.checkAlarm(ALARM_2)) {      // time to turn off?
                 state = LED_OFF;
                 RTC.clearAlarm(ALARM_1);
                 digitalWrite(LED_BUILTIN, LOW);
