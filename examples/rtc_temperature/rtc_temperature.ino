@@ -19,10 +19,12 @@
 //
 // Jack Christensen 09Sep2019
 
-#include <DS3232RTC.h>          // https://github.com/JChristensen/DS3232RTC
-#include <Streaming.h>          // http://arduiniana.org/libraries/streaming/
+#include <DS3232RTC.h>      // https://github.com/JChristensen/DS3232RTC
+#include <Streaming.h>      // https://github.com/janelia-arduino/Streaming
 
-const uint8_t RTC_1HZ_PIN(2);   // RTC provides a 1Hz interrupt signal on this pin
+constexpr uint8_t RTC_1HZ_PIN {3};  // RTC provides a 1Hz interrupt signal on this pin
+                                    // Can use Pin 2 (INT0) or Pin 3 (INT1) with Arduino Uno
+DS3232RTC myRTC;
 
 void setup()
 {
@@ -31,11 +33,12 @@ void setup()
 
     pinMode(RTC_1HZ_PIN, INPUT_PULLUP);     // enable pullup on interrupt pin (RTC SQW pin is open drain)
     attachInterrupt(digitalPinToInterrupt(RTC_1HZ_PIN), incrementTime, FALLING);
-    RTC.squareWave(SQWAVE_1_HZ);            // 1 Hz square wave
+    myRTC.begin();
+    myRTC.squareWave(DS3232RTC::SQWAVE_1_HZ);   // 1 Hz square wave
 
     time_t utc = getUTC();                  // synchronize with RTC
     while (utc == getUTC());                // wait for increment to the next second
-    utc = RTC.get();                        // get the time from the RTC
+    utc = myRTC.get();                      // get the time from the RTC
     setUTC(utc);                            // set our time to the RTC's time
     Serial << F("Time set from RTC\n");
 }
@@ -46,13 +49,11 @@ void loop()
     static int16_t lastTemp;
     time_t t = getUTC();
 
-    if (t != tLast)
-    {
+    if (t != tLast) {
         tLast = t;
         if (second(t) % 10 == 0) convertTemperature();
-        int16_t rtcTemp = RTC.temperature();
-        if (rtcTemp != lastTemp || second(t) == 0)
-        {
+        int16_t rtcTemp = myRTC.temperature();
+        if (rtcTemp != lastTemp || second(t) == 0) {
             lastTemp = rtcTemp;
             float c = rtcTemp / 4.;
             float f = c * 9. / 5. + 32.;
@@ -62,39 +63,30 @@ void loop()
     }
 }
 
-#define RTC_CONTROL 0x0E
-#define RTC_STATUS 0x0F
-#define CONV 5
-#define BSY 2
-
 // force the RTC to do a temperature conversion
 void convertTemperature()
 {
     // get the status register
-    uint8_t s = RTC.readRTC(RTC_STATUS);
+    uint8_t s = myRTC.readRTC(DS3232RTC::RTC_STATUS);
     // start a conversion, unless one is already in progress
-    if (!(s & _BV(BSY)))
-    {
+    if (!(s & _BV(DS3232RTC::BSY))) {
         // get the control register and set the CONV bit
-        uint8_t c = RTC.readRTC(RTC_CONTROL);
-        RTC.writeRTC(RTC_CONTROL, c | _BV(CONV));
+        uint8_t c = myRTC.readRTC(DS3232RTC::RTC_CONTROL);
+        myRTC.writeRTC(DS3232RTC::RTC_CONTROL, c | _BV(DS3232RTC::CONV));
         // wait for the CONV bit to turn off
         bool busy = true;
-        while (busy)
-        {
+        while (busy) {
             Serial << F("Wait CONV\n");
-            delay(100);
-            busy = RTC.readRTC(RTC_CONTROL) & _BV(CONV);
+            delay(200);
+            busy = myRTC.readRTC(DS3232RTC::RTC_CONTROL) & _BV(DS3232RTC::CONV);
         }
     }
-    else
-    {
+    else {
         bool busy = true;
-        while (busy)
-        {
+        while (busy) {
             Serial << F("Wait BSY\n");
-            delay(100);
-            busy = RTC.readRTC(RTC_STATUS) & _BV(BSY);
+            delay(200);
+            busy = myRTC.readRTC(DS3232RTC::RTC_STATUS) & _BV(DS3232RTC::BSY);
         }
     }
 }

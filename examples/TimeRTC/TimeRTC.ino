@@ -2,15 +2,19 @@
 // https://github.com/JChristensen/DS3232RTC
 //
 // Example sketch illustrating Time library with Real Time Clock.
-// This example is identical to the example provided with the Time Library,
-// only the #include statement has been changed to include the DS3232RTC library.
+// This example is similar to the example provided with the Time Library.
+// The #include statement has been changed to include the DS3232RTC library,
+// a DS3232RTC object has been defined (myRTC) and the begin() method is called.
 
 #include <DS3232RTC.h>      // https://github.com/JChristensen/DS3232RTC
 
+DS3232RTC myRTC;
+
 void setup()
 {
-    Serial.begin(9600);
-    setSyncProvider(RTC.get);   // the function to get the time from the RTC
+    Serial.begin(115200);
+    myRTC.begin();
+    setSyncProvider(myRTC.get);   // the function to get the time from the RTC
     if(timeStatus() != timeSet)
         Serial.println("Unable to sync with the RTC");
     else

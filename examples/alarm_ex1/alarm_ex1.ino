@@ -16,49 +16,50 @@
 // Jack Christensen 16Sep2017
 
 #include <DS3232RTC.h>      // https://github.com/JChristensen/DS3232RTC
-#include <Streaming.h>      // http://arduiniana.org/libraries/streaming/
+#include <Streaming.h>      // https://github.com/janelia-arduino/Streaming
+
+DS3232RTC myRTC;
 
 void setup()
 {
     Serial.begin(115200);
 
     // initialize the alarms to known values, clear the alarm flags, clear the alarm interrupt flags
-    RTC.setAlarm(ALM1_MATCH_DATE, 0, 0, 0, 1);
-    RTC.setAlarm(ALM2_MATCH_DATE, 0, 0, 0, 1);
-    RTC.alarm(ALARM_1);
-    RTC.alarm(ALARM_2);
-    RTC.alarmInterrupt(ALARM_1, false);
-    RTC.alarmInterrupt(ALARM_2, false);
-    RTC.squareWave(SQWAVE_NONE);
+    myRTC.begin();
+    myRTC.setAlarm(DS3232RTC::ALM1_MATCH_DATE, 0, 0, 0, 1);
+    myRTC.setAlarm(DS3232RTC::ALM2_MATCH_DATE, 0, 0, 0, 1);
+    myRTC.alarm(DS3232RTC::ALARM_1);
+    myRTC.alarm(DS3232RTC::ALARM_2);
+    myRTC.alarmInterrupt(DS3232RTC::ALARM_1, false);
+    myRTC.alarmInterrupt(DS3232RTC::ALARM_2, false);
+    myRTC.squareWave(DS3232RTC::SQWAVE_NONE);
 
     // set the RTC time and date to the compile time
-    RTC.set(compileTime());
+    myRTC.set(compileTime());
 
     // set Alarm 1 to occur at 5 seconds after every minute
-    RTC.setAlarm(ALM1_MATCH_SECONDS, 5, 0, 0, 1);
+    myRTC.setAlarm(DS3232RTC::ALM1_MATCH_SECONDS, 5, 0, 0, 1);
     // clear the alarm flag
-    RTC.alarm(ALARM_1);
+    myRTC.alarm(DS3232RTC::ALARM_1);
 
     Serial << millis() << " Start ";
-    printDateTime(RTC.get());
+    printDateTime(myRTC.get());
     Serial << endl;
 }
 
 void loop()
 {
-    if ( RTC.alarm(ALARM_1) )    // check alarm flag, clear it if set
-    {
+    if ( myRTC.alarm(DS3232RTC::ALARM_1) ) {    // check alarm flag, clear it if set
         Serial << millis() << " ALARM_1 ";
-        printDateTime(RTC.get());
+        printDateTime(myRTC.get());
         Serial << endl;
     }
-    if ( RTC.alarm(ALARM_2) )    // check alarm flag, clear it if set
-    {
+    if ( myRTC.alarm(DS3232RTC::ALARM_2) ) {    // check alarm flag, clear it if set
         Serial << millis() << " ALARM_2 ";
-        printDateTime(RTC.get());
+        printDateTime(myRTC.get());
         Serial << endl;
     }
-    delay(100);                  // no need to bombard the RTC continuously
+    delay(100);     // no need to bombard the RTC continuously
 }
 
 void printDateTime(time_t t)

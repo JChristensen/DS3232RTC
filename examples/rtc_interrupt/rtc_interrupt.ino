@@ -28,7 +28,9 @@
 
 #include <DS3232RTC.h>          // https://github.com/JChristensen/DS3232RTC
 
-const uint8_t RTC_1HZ_PIN(2);   // RTC provides a 1Hz interrupt signal on this pin
+constexpr uint8_t RTC_1HZ_PIN {3};  // RTC provides a 1Hz interrupt signal on this pin
+                                    // Can use Pin 2 (INT0) or Pin 3 (INT1) with Arduino Uno
+DS3232RTC myRTC;
 
 void setup()
 {
@@ -37,11 +39,12 @@ void setup()
 
     pinMode(RTC_1HZ_PIN, INPUT_PULLUP);     // enable pullup on interrupt pin (RTC SQW pin is open drain)
     attachInterrupt(digitalPinToInterrupt(RTC_1HZ_PIN), incrementTime, FALLING);
-    RTC.squareWave(SQWAVE_1_HZ);            // 1 Hz square wave
+    myRTC.begin();
+    myRTC.squareWave(DS3232RTC::SQWAVE_1_HZ);   // 1 Hz square wave
 
     time_t utc = getUTC();                  // synchronize with RTC
     while ( utc == getUTC() );              // wait for increment to the next second
-    utc = RTC.get();                        // get the time from the RTC
+    utc = myRTC.get();                      // get the time from the RTC
     setUTC(utc);                            // set our time to the RTC's time
     Serial.println("Time set from RTC");
 }
@@ -51,8 +54,7 @@ void loop()
     static time_t tLast;
     time_t t = getUTC();
 
-    if (t != tLast)
-    {
+    if (t != tLast) {
         tLast = t;
         printTime(t);
     }

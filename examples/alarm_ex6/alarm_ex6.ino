@@ -12,10 +12,10 @@
 // a square wave is output, but then the alarm() function will need
 // to be used to determine if an alarm has triggered. Even though
 // the DS3231 power-on default for the INT/SQW pin is as an alarm
-// output, it's good practice to call RTC.squareWave(SQWAVE_NONE)
+// output, it's good practice to call DS3232RTC::squareWave(SQWAVE_NONE)
 // before setting alarms.
 //
-// I recommend calling RTC.alarm() before RTC.alarmInterrupt()
+// I recommend calling DS3232RTC::alarm() before DS3232RTC::alarmInterrupt()
 // to ensure the RTC's alarm flag is cleared.
 //
 // The RTC's time is updated on the falling edge of the 1Hz square
@@ -29,54 +29,56 @@
 // Tested with Arduino 1.8.5, Arduino Uno, DS3231.
 // Connect RTC SDA to Arduino pin A4.
 // Connect RTC SCL to Arduino pin A5.
-// Connect RTC INT/SQW to Arduino pin 2.
+// Connect RTC INT/SQW to Arduino pin 3.
 //
 // Jack Christensen 01Jan2018
 
 #include <DS3232RTC.h>      // https://github.com/JChristensen/DS3232RTC
-#include <Streaming.h>      // http://arduiniana.org/libraries/streaming/
+#include <Streaming.h>      // https://github.com/janelia-arduino/Streaming
 
-const uint8_t SQW_PIN(2);   // connect this pin to DS3231 INT/SQW pin
+constexpr uint8_t SQW_PIN {3};  // RTC provides an interrupt signal on this pin
+                                // Can use Pin 2 (INT0) or Pin 3 (INT1) with Arduino Uno
+DS3232RTC myRTC;
 
 void setup()
 {
     Serial.begin(115200);
 
     // initialize the alarms to known values, clear the alarm flags, clear the alarm interrupt flags
-    RTC.setAlarm(ALM1_MATCH_DATE, 0, 0, 0, 1);
-    RTC.setAlarm(ALM2_MATCH_DATE, 0, 0, 0, 1);
-    RTC.alarm(ALARM_1);
-    RTC.alarm(ALARM_2);
-    RTC.alarmInterrupt(ALARM_1, false);
-    RTC.alarmInterrupt(ALARM_2, false);
-    RTC.squareWave(SQWAVE_NONE);
+    myRTC.begin();
+    myRTC.setAlarm(DS3232RTC::ALM1_MATCH_DATE, 0, 0, 0, 1);
+    myRTC.setAlarm(DS3232RTC::ALM2_MATCH_DATE, 0, 0, 0, 1);
+    myRTC.alarm(DS3232RTC::ALARM_1);
+    myRTC.alarm(DS3232RTC::ALARM_2);
+    myRTC.alarmInterrupt(DS3232RTC::ALARM_1, false);
+    myRTC.alarmInterrupt(DS3232RTC::ALARM_2, false);
+    myRTC.squareWave(DS3232RTC::SQWAVE_NONE);
 
     // setSyncProvider() causes the Time library to synchronize with the
-    // external RTC by calling RTC.get() every five minutes by default.
-    setSyncProvider(RTC.get);
+    // external RTC by calling myRTC.get() every five minutes by default.
+    setSyncProvider(myRTC.get);
     Serial << "RTC Sync";
-    if (timeStatus() != timeSet)
-    {
+    if (timeStatus() != timeSet) {
         Serial << " FAIL!";
     }
     Serial << endl;
 
-    printDateTime(RTC.get());
-    Serial << " --> Current RTC time\n";
+    printDateTime(myRTC.get());
+    Serial << "  Current RTC time\n";
 
     // configure an interrupt on the falling edge from the SQW pin
     pinMode(SQW_PIN, INPUT_PULLUP);
-    attachInterrupt(INT0, alarmIsr, FALLING);
+    attachInterrupt(digitalPinToInterrupt(SQW_PIN), alarmIsr, FALLING);
 
     // set alarm 1 for 20 seconds after every minute
-    RTC.setAlarm(ALM1_MATCH_SECONDS, 20, 0, 0, 1);  // daydate parameter should be between 1 and 7
-    RTC.alarm(ALARM_1);                   // ensure RTC interrupt flag is cleared
-    RTC.alarmInterrupt(ALARM_1, true);
+    myRTC.setAlarm(DS3232RTC::ALM1_MATCH_SECONDS, 20, 0, 0, 1); // daydate parameter should be between 1 and 7
+    myRTC.alarm(DS3232RTC::ALARM_1);                            // ensure RTC interrupt flag is cleared
+    myRTC.alarmInterrupt(DS3232RTC::ALARM_1, true);
 
     // set alarm 2 for every minute
-    RTC.setAlarm(ALM2_EVERY_MINUTE, 0, 0, 0, 1);    // daydate parameter should be between 1 and 7
-    RTC.alarm(ALARM_2);                   // ensure RTC interrupt flag is cleared
-    RTC.alarmInterrupt(ALARM_2, true);
+    myRTC.setAlarm(DS3232RTC::ALM2_EVERY_MINUTE, 0, 0, 0, 1);   // daydate parameter should be between 1 and 7
+    myRTC.alarm(DS3232RTC::ALARM_2);                            // ensure RTC interrupt flag is cleared
+    myRTC.alarmInterrupt(DS3232RTC::ALARM_2, true);
 }
 
 volatile boolean alarmIsrWasCalled = false;
@@ -88,17 +90,14 @@ void alarmIsr()
 
 void loop()
 {
-    if (alarmIsrWasCalled)
-    {
-        if (RTC.alarm(ALARM_1))
-        {
-            printDateTime( RTC.get() );
-            Serial << " --> Alarm 1\n";
+    if (alarmIsrWasCalled) {
+        if (myRTC.alarm(DS3232RTC::ALARM_1)) {
+            printDateTime( myRTC.get() );
+            Serial << "  Alarm 1\n";
         }
-        if (RTC.alarm(ALARM_2))
-        {
-            printDateTime( RTC.get() );
-            Serial << " --> Alarm 2\n";
+        if (myRTC.alarm(DS3232RTC::ALARM_2)) {
+            printDateTime( myRTC.get() );
+            Serial << "  Alarm 2\n";
         }
         alarmIsrWasCalled = false;
     }

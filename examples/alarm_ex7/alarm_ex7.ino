@@ -13,65 +13,64 @@
 // Arduino Uno, DS3231 RTC.
 // Connect RTC SDA to Arduino pin A4.
 // Connect RTC SCL to Arduino pin A5.
-// Connect RTC INT/SQW to Arduino pin 2.
+// Connect RTC INT/SQW to Arduino pin 3.
 //
 // Jack Christensen 16Sep2017
 
-#include <DS3232RTC.h>        // https://github.com/JChristensen/DS3232RTC
-#include <Streaming.h>        // http://arduiniana.org/libraries/streaming/
+#include <DS3232RTC.h>      // https://github.com/JChristensen/DS3232RTC
+#include <Streaming.h>      // https://github.com/janelia-arduino/Streaming
 
-// pin definitions
-const uint8_t alarmInput(2);
+constexpr uint8_t RTC_INT_PIN {3};  // RTC provides an alarm signal on this pin
+DS3232RTC myRTC;
 
 void setup()
 {
     Serial.begin(115200);
-    pinMode(2, INPUT_PULLUP);
+    pinMode(RTC_INT_PIN, INPUT_PULLUP);
 
     // initialize the alarms to known values, clear the alarm flags, clear the alarm interrupt flags
-    RTC.setAlarm(ALM1_MATCH_DATE, 0, 0, 0, 1);
-    RTC.setAlarm(ALM2_MATCH_DATE, 0, 0, 0, 1);
-    RTC.alarm(ALARM_1);
-    RTC.alarm(ALARM_2);
-    RTC.alarmInterrupt(ALARM_1, false);
-    RTC.alarmInterrupt(ALARM_2, false);
-    RTC.squareWave(SQWAVE_NONE);
+    myRTC.begin();
+    myRTC.setAlarm(DS3232RTC::ALM1_MATCH_DATE, 0, 0, 0, 1);
+    myRTC.setAlarm(DS3232RTC::ALM2_MATCH_DATE, 0, 0, 0, 1);
+    myRTC.alarm(DS3232RTC::ALARM_1);
+    myRTC.alarm(DS3232RTC::ALARM_2);
+    myRTC.alarmInterrupt(DS3232RTC::ALARM_1, false);
+    myRTC.alarmInterrupt(DS3232RTC::ALARM_2, false);
+    myRTC.squareWave(DS3232RTC::SQWAVE_NONE);
 
     tmElements_t tm;
     tm.Hour = 06;               // set the RTC time to 06:29:50
     tm.Minute = 29;
     tm.Second = 50;
-    tm.Day = 16;
-    tm.Month = 9;
-    tm.Year = 2017 - 1970;      // tmElements_t.Year is the offset from 1970
-    RTC.write(tm);              // set the RTC from the tm structure
+    tm.Day = 1;
+    tm.Month = 1;
+    tm.Year = 2022 - 1970;      // tmElements_t.Year is the offset from 1970
+    myRTC.write(tm);            // set the RTC from the tm structure
 
     // set Alarm 2 for 06:30:00
-    RTC.setAlarm(ALM2_MATCH_HOURS, 0, 30, 6, 0);
+    myRTC.setAlarm(DS3232RTC::ALM2_MATCH_HOURS, 0, 30, 6, 0);
     // clear the alarm flags
-    RTC.alarm(ALARM_1);
-    RTC.alarm(ALARM_2);
-    // configure the INT/SQW pin for "interrupt" operation (disable square wave output)
-    RTC.squareWave(SQWAVE_NONE);
+    myRTC.alarm(DS3232RTC::ALARM_1);
+    myRTC.alarm(DS3232RTC::ALARM_2);
+    // configure the INT/SQW pin for "interrupt" operation (i.e. disable square wave output)
+    myRTC.squareWave(DS3232RTC::SQWAVE_NONE);
     // enable interrupt output for Alarm 2 only
-    RTC.alarmInterrupt(ALARM_1, false);
-    RTC.alarmInterrupt(ALARM_2, true);
+    myRTC.alarmInterrupt(DS3232RTC::ALARM_1, false);
+    myRTC.alarmInterrupt(DS3232RTC::ALARM_2, true);
 }
 
 void loop()
 {
     // check to see if the INT/SQW pin is low, i.e. an alarm has occurred
-    if ( !digitalRead(alarmInput) )
-    {
-        RTC.alarm(ALARM_2);    // reset the alarm flag
+    if ( !digitalRead(RTC_INT_PIN) ) {
+        myRTC.alarm(DS3232RTC::ALARM_2);    // reset the alarm flag
         Serial << "ALARM_2\n";
     }
 
     // print the time when it changes
     static time_t tLast;
-    time_t t = RTC.get();
-    if (t != tLast)
-    {
+    time_t t = myRTC.get();
+    if (t != tLast) {
         tLast = t;
         printDateTime(t);
         Serial << endl;

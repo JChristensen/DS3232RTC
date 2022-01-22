@@ -3,9 +3,7 @@
 // Copyright (C) 2019 by Jack Christensen and licensed under
 // GNU GPL v3.0, https://www.gnu.org/licenses/gpl.html
 //
-// Simple example sketch that should work on any architecture.
-// For the AVR architecture, instantiating the DS3232RTC object
-// is redundant, but this is only for testing purposes.
+// Example sketch to display time and temperature.
 //
 // Jack Christensen 24Sep2019
 

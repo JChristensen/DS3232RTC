@@ -16,47 +16,49 @@
 // Jack Christensen 16Sep2017
 
 #include <DS3232RTC.h>      // https://github.com/JChristensen/DS3232RTC
-#include <Streaming.h>      // http://arduiniana.org/libraries/streaming/
+#include <Streaming.h>      // https://github.com/janelia-arduino/Streaming
+
+DS3232RTC myRTC;
 
 void setup()
 {
     Serial.begin(115200);
 
     // initialize the alarms to known values, clear the alarm flags, clear the alarm interrupt flags
-    RTC.setAlarm(ALM1_MATCH_DATE, 0, 0, 0, 1);
-    RTC.setAlarm(ALM2_MATCH_DATE, 0, 0, 0, 1);
-    RTC.alarm(ALARM_1);
-    RTC.alarm(ALARM_2);
-    RTC.alarmInterrupt(ALARM_1, false);
-    RTC.alarmInterrupt(ALARM_2, false);
-    RTC.squareWave(SQWAVE_NONE);
+    myRTC.begin();
+    myRTC.setAlarm(DS3232RTC::ALM1_MATCH_DATE, 0, 0, 0, 1);
+    myRTC.setAlarm(DS3232RTC::ALM2_MATCH_DATE, 0, 0, 0, 1);
+    myRTC.alarm(DS3232RTC::ALARM_1);
+    myRTC.alarm(DS3232RTC::ALARM_2);
+    myRTC.alarmInterrupt(DS3232RTC::ALARM_1, false);
+    myRTC.alarmInterrupt(DS3232RTC::ALARM_2, false);
+    myRTC.squareWave(DS3232RTC::SQWAVE_NONE);
 
     tmElements_t tm;
     tm.Hour = 00;           // set the RTC to an arbitrary time
     tm.Minute = 00;
     tm.Second = 00;
-    tm.Day = 16;
-    tm.Month = 9;
-    tm.Year = 2017 - 1970;  // tmElements_t.Year is the offset from 1970
-    RTC.write(tm);          // set the RTC from the tm structure
+    tm.Day = 1;
+    tm.Month = 1;
+    tm.Year = 2022 - 1970;  // tmElements_t.Year is the offset from 1970
+    myRTC.write(tm);          // set the RTC from the tm structure
 
     // set Alarm 1 to occur once per second
-    RTC.setAlarm(ALM1_EVERY_SECOND, 0, 0, 0, 0);
+    myRTC.setAlarm(DS3232RTC::ALM1_EVERY_SECOND, 0, 0, 0, 0);
     // clear the alarm flag
-    RTC.alarm(ALARM_1);
+    myRTC.alarm(DS3232RTC::ALARM_1);
 
     Serial << millis() << " Start ";
-    printDateTime(RTC.get());
+    printDateTime(myRTC.get());
     Serial << endl;
 }
 
 void loop()
 {
     // check to see if the alarm flag is set (also resets the flag if set)
-    if ( RTC.alarm(ALARM_1) )
-    {
+    if ( myRTC.alarm(DS3232RTC::ALARM_1) ) {
         Serial << millis() << " ALARM_1 ";
-        printDateTime(RTC.get());
+        printDateTime(myRTC.get());
         Serial << endl;
     }
 }
