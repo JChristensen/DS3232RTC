@@ -37,7 +37,7 @@ void setup()
     Serial.begin(115200);
     Serial << F( "\n" __FILE__ "\n" __DATE__ " " __TIME__ "\n" );
     myRTC.begin();
-    
+
     // setSyncProvider() causes the Time library to synchronize with the
     // external RTC by calling RTC.get() every five minutes by default.
     setSyncProvider(myRTC.get);

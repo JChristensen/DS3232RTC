@@ -20,13 +20,16 @@
 #include <DS3232RTC.h>              // https://github.com/JChristensen/DS3232RTC
 #include <TinyDebugKnockBang.h>     // https://github.com/Coding-Badly/TinyDebugKnockBang
 
+DS3232RTC myRTC;
+
 void setup()
 {
     Debug.begin(250000);
+    myRTC.begin();
 
     // setSyncProvider() causes the Time library to synchronize with the
-    // external RTC by calling RTC.get() every five minutes by default.
-    setSyncProvider(RTC.get);
+    // external RTC by calling myRTC.get() every five minutes by default.
+    setSyncProvider(myRTC.get);
     Debug.print(F("RTC Sync"));
     if (timeStatus() != timeSet) Debug.print(F(" FAIL!"));
     Debug.println();

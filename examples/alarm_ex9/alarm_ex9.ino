@@ -57,7 +57,7 @@ void setup()
         myRTC.alarmInterrupt(DS3232RTC::ALARM_1, false);
         myRTC.alarmInterrupt(DS3232RTC::ALARM_2, false);
         myRTC.squareWave(DS3232RTC::SQWAVE_NONE);
-        
+
         // set alarm 1 to occur in 1-2 minutes
         // set alarm 2 to occur 5 minutes after alarm 1
         tmElements_t tm;
