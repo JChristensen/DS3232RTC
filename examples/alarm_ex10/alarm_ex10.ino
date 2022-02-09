@@ -36,7 +36,7 @@
 constexpr uint32_t wakeInterval {5};    // wake interval in minutes
 constexpr uint32_t ledInterval {10};    // seconds to leave the LED on after an alarm
 static_assert(ledInterval < wakeInterval*60, "ledInterval must be less than wakeInterval!");
-constexpr uint8_t rtcIntPin {2};        // RTC interrupt. Pin 2 for INT0, Pin 3 for INT1.
+constexpr uint8_t rtcIntPin {3};        // RTC interrupt. Pin 2 for INT0, Pin 3 for INT1.
 constexpr uint8_t  rtcPower {5};        // RTC power is supplied by the MCU
 volatile bool rtcAlarm {false};         // ISR flag
 DS3232RTC myRTC;

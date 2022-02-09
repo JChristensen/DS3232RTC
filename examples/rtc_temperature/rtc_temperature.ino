@@ -67,18 +67,18 @@ void loop()
 void convertTemperature()
 {
     // get the status register
-    uint8_t s = myRTC.readRTC(DS3232RTC::RTC_STATUS);
+    uint8_t s = myRTC.readRTC(DS3232RTC::DS32_STATUS);
     // start a conversion, unless one is already in progress
-    if (!(s & _BV(DS3232RTC::BSY))) {
+    if (!(s & _BV(DS3232RTC::DS32_BSY))) {
         // get the control register and set the CONV bit
-        uint8_t c = myRTC.readRTC(DS3232RTC::RTC_CONTROL);
-        myRTC.writeRTC(DS3232RTC::RTC_CONTROL, c | _BV(DS3232RTC::CONV));
+        uint8_t c = myRTC.readRTC(DS3232RTC::DS32_CONTROL);
+        myRTC.writeRTC(DS3232RTC::DS32_CONTROL, c | _BV(DS3232RTC::DS32_CONV));
         // wait for the CONV bit to turn off
         bool busy = true;
         while (busy) {
             Serial << F("Wait CONV\n");
             delay(200);
-            busy = myRTC.readRTC(DS3232RTC::RTC_CONTROL) & _BV(DS3232RTC::CONV);
+            busy = myRTC.readRTC(DS3232RTC::DS32_CONTROL) & _BV(DS3232RTC::DS32_CONV);
         }
     }
     else {
@@ -86,7 +86,7 @@ void convertTemperature()
         while (busy) {
             Serial << F("Wait BSY\n");
             delay(200);
-            busy = myRTC.readRTC(DS3232RTC::RTC_STATUS) & _BV(DS3232RTC::BSY);
+            busy = myRTC.readRTC(DS3232RTC::DS32_STATUS) & _BV(DS3232RTC::DS32_BSY);
         }
     }
 }

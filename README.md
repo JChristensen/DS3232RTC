@@ -15,11 +15,12 @@ You should have received a copy of the GNU General Public License along with thi
 
 ## Important note: Library v2.0.0
 
-The 2.0.0 version of the library has some significant changes and is not completely backwards compatible with earlier versions. These changes provide a more consistent API and reduce the possibility of name collisions.
+The 2.0.0 version of the library has some significant changes and is not completely backwards compatible with earlier versions. These changes provide a more consistent API and reduce the possibility of name collisions. While sketches using this library will likely require changes as a result, these should be mostly straightforward.
 
  - The library no longer defines a `DS3232RTC` object, therefore each sketch needs to define  one. Previous versions of the library defined a DS3232RTC object named `RTC`, only for AVR architectures. (Consider using a name other than `RTC` as this can cause a name collision on some architectures.)
  - The constructor no longer has the capability to initialize the I2C bus, therefore, the sketch needs to call `DS3232RTC::begin()` in the `setup()` function or elsewhere as appropriate.
  - To reduce the possibility of name collisions, the enumerations as well as register addresses, etc. are now defined in the header file within the DS3232RTC class. Therefore, when using any of these names, it will be necessary to include the DS3232RTC scope, e.g. `myRTC.alarm(DS3232RTC::ALARM_1);`
+ - Also to reduce collisions, register address names and bit names have been prefixed with `DS32_` (see the header file.)
  - The example sketches and documentation have been updated to reflect these changes.
 
 ## Introduction
@@ -141,7 +142,7 @@ Sets the RTC date and time to the given `time_t` value. Clears the oscillator st
 ##### Parameters
 **t:** The date and time to set the RTC to *(time_t)*
 ##### Returns
-I2C status *(byte)*. Returns zero if successful.
+I2C status *(uint8_t)*. Returns zero if successful.
 ##### Example
 ```c++
 // this example first sets the system time (maintained by the Time library) to
@@ -159,7 +160,7 @@ Reads the current date and time from the RTC and returns it as a `tmElements_t` 
 ##### Parameters
 **tm:** Address of a `tmElements_t` structure to which the date and time are returned.
 ##### Returns
-I2C status *(byte)*. Returns zero if successful. The date and time read from the RTC are returned to the `tm` parameter.
+I2C status *(uint8_t)*. Returns zero if successful. The date and time read from the RTC are returned to the `tm` parameter.
 ##### Example
 ```c++
 tmElements_t tm;
@@ -179,7 +180,7 @@ Sets the RTC to the date and time given by a `tmElements_t` structure. Clears th
 ##### Parameters
 **tm:** Address of a `tmElements_t` structure used to set the date and time.
 ##### Returns
-I2C status *(byte)*. Returns zero if successful.
+I2C status *(uint8_t)*. Returns zero if successful.
 ##### Example
 ```c++
 tmElements_t tm;
@@ -189,13 +190,13 @@ tm.Second = 30;
 tm.Day = 13;
 tm.Month = 2;
 tm.Year = 2009 - 1970;    // tmElements_t.Year is the offset from 1970
-myRTC.write(tm);         // set the RTC from the tm structure
+myRTC.write(tm);          // set the RTC from the tm structure
 ```
 
 ## Alarm functions
 The DS3231 and DS3232 have two alarms. Alarm1 can be set to seconds precision; Alarm2 can only be set to minutes precision.
 
-### setAlarm(ALARM_TYPES_t alarmType, byte seconds, byte minutes, byte hours, byte daydate)
+### setAlarm(ALARM_TYPES_t alarmType, uint8_t seconds, uint8_t minutes, uint8_t hours, uint8_t daydate)
 ##### Description
 Set an alarm time. Sets the alarm registers only.  To cause the INT pin to be asserted on alarm match, use `alarmInterrupt()`. This function can set either Alarm 1 or Alarm 2, depending on the value of `alarmType` (use the `ALARM_TYPES_t` enumeration above). When setting Alarm 2, the seconds value must be supplied but is ignored, recommend using zero. (Alarm 2 has no seconds register.)
 
@@ -203,19 +204,19 @@ Set an alarm time. Sets the alarm registers only.  To cause the INT pin to be as
 `myRTC.setAlarm(alarmType, seconds, minutes, hours, dayOrDate);`
 ##### Parameters
 **alarmType:** A value from the `ALARM_TYPES_t` enumeration, above. *(ALARM_TYPES_t)*  
-**seconds:** The seconds value to set the alarm to. *(byte)*  
-**minutes:** The minutes value to set the alarm to. *(byte)*  
-**hours:** The hours value to set the alarm to. *(byte)*  
-**dayOrDate:** The day of the week or the date of the month. For day of the week, use a value from the Time library `timeDayOfWeek_t` enumeration, i.e. dowSunday, dowMonday, dowTuesday, dowWednesday, dowThursday, dowFriday, dowSaturday. *(byte)*  
+**seconds:** The seconds value to set the alarm to. *(uint8_t)*  
+**minutes:** The minutes value to set the alarm to. *(uint8_t)*  
+**hours:** The hours value to set the alarm to. *(uint8_t)*  
+**dayOrDate:** The day of the week or the date of the month. For day of the week, use a value from the Time library `timeDayOfWeek_t` enumeration, i.e. dowSunday, dowMonday, dowTuesday, dowWednesday, dowThursday, dowFriday, dowSaturday. *(uint8_t)*  
 ##### Returns
 None.
 ##### Example
 ```c++
 // Set Alarm1 for 12:34:56 on Sunday
-myRTC.setAlarm(ALM1_MATCH_DAY, 56, 34, 12, dowSunday);
+myRTC.setAlarm(DS3232RTC::ALM1_MATCH_DAY, 56, 34, 12, dowSunday);
 ```
 
-### setAlarm(ALARM_TYPES_t alarmType, byte minutes, byte hours, byte daydate)
+### setAlarm(ALARM_TYPES_t alarmType, uint8_t minutes, uint8_t hours, uint8_t daydate)
 ##### Description
 Set an alarm time. Sets the alarm registers only.  To cause the INT pin to be asserted on alarm match, use `alarmInterrupt()`.  This function can set either Alarm 1 or Alarm 2, depending on the value of `alarmTyp`e (use the `ALARM_TYPES_t` enumeration above). However, when using this function to set Alarm 1, the seconds value is set to zero. (Alarm 2 has no seconds register.)
 
@@ -223,15 +224,15 @@ Set an alarm time. Sets the alarm registers only.  To cause the INT pin to be as
 `myRTC.setAlarm(alarmType, minutes, hours, dayOrDate);`
 ##### Parameters
 **alarmType:** A value from the ALARM_TYPES_t enumeration, above. *(ALARM_TYPES_t)*  
-**minutes:** The minutes value to set the alarm to. *(byte)*  
-**hours:** The hours value to set the alarm to. *(byte)*  
-**dayOrDate:** The day of the week or the date of the month. For day of the week, use a value from the Time library timeDayOfWeek_t enumeration, i.e. dowSunday, dowMonday, dowTuesday, dowWednesday, dowThursday, dowFriday, dowSaturday. *(byte)*  
+**minutes:** The minutes value to set the alarm to. *(uint8_t)*  
+**hours:** The hours value to set the alarm to. *(uint8_t)*  
+**dayOrDate:** The day of the week or the date of the month. For day of the week, use a value from the Time library timeDayOfWeek_t enumeration, i.e. dowSunday, dowMonday, dowTuesday, dowWednesday, dowThursday, dowFriday, dowSaturday. *(uint8_t)*  
 ##### Returns
 None.
 ##### Example
 ```c++
 // Set Alarm2 for 12:34 on the 4th day of the month
-myRTC.setAlarm(ALM2_MATCH_DATE, 34, 12, 4);
+myRTC.setAlarm(DS3232RTC::ALM2_MATCH_DATE, 34, 12, 4);
 ```
 
 ### alarmInterrupt(ALARM_NBR_t alarmNumber, bool alarmEnabled)
@@ -309,69 +310,69 @@ else {
 ## Functions for reading and writing RTC registers or static RAM (SRAM) for the DS3232
 The DS3232RTC.h file defines symbolic names for the timekeeping, alarm, status and control registers. These can be used for the addr argument in the functions below.
 
-### writeRTC(byte addr, byte* values, byte nBytes)
+### writeRTC(uint8_t addr, uint8_t* values, uint8_t nBytes)
 ##### Description
 Write one or more bytes to RTC memory.
 ##### Syntax
 `myRTC.writeRTC(addr, values, nbytes);`
 ##### Parameters
-**addr:** First SRAM address to write *(byte)*. The valid address range is 0x00-0x12 for DS3231, 0x00-0xFF for DS3232. The general-purpose SRAM for the DS3232 begins at address 0x14. Address is not checked for validity by the library.  
-**values:** An array of values to write _(*byte)_  
-**nBytes:** Number of bytes to write *(byte)*. Must be between 1 and 31 (Wire library limitation) but is not checked by the library. 
+**addr:** First SRAM address to write *(uint8_t)*. The valid address range is 0x00-0x12 for DS3231, 0x00-0xFF for DS3232. The general-purpose SRAM for the DS3232 begins at address 0x14. Address is not checked for validity by the library.  
+**values:** An array of values to write _(*uint8_t)_  
+**nBytes:** Number of bytes to write *(uint8_t)*. Must be between 1 and 31 (Wire library limitation) but is not checked by the library. 
 ##### Returns
-I2C status *(byte)*. Returns zero if successful.
+I2C status *(uint8_t)*. Returns zero if successful.
 ##### Example
 ```c++
 //write 1, 2, ..., 8 to the first eight DS3232 SRAM locations
-byte buf[8] = {1, 2, 3, 4, 5, 6, 7, 8};
+uint8_t buf[8] = {1, 2, 3, 4, 5, 6, 7, 8};
 myRTC.sramWrite(0x14, buf, 8);
 ```
 
-### writeRTC(byte addr, byte value)
+### writeRTC(uint8_t addr, uint8_t value)
 ##### Description
 Write a single byte to RTC memory.
 ##### Syntax
 `myRTC.writeRTC(addr, value);`
 ##### Parameters
-**addr:** SRAM address to write *(byte)*. The valid address range is 0x00-0x12 for DS3231, 0x00-0xFF for DS3232. The general-purpose SRAM for the DS3232 begins at address 0x14. Address is not checked for validity by the library.  
-**value:** Value to write _(byte)_  
+**addr:** SRAM address to write *(uint8_t)*. The valid address range is 0x00-0x12 for DS3231, 0x00-0xFF for DS3232. The general-purpose SRAM for the DS3232 begins at address 0x14. Address is not checked for validity by the library.  
+**value:** Value to write _(uint8_t)_  
 ##### Returns
-I2C status *(byte)*. Returns zero if successful.
+I2C status *(uint8_t)*. Returns zero if successful.
 ##### Example
 ```c++
 myRTC.writeRTC(3, 14);   // write the value 14 to SRAM address 3
 ```
 
-### readRTC(byte addr, byte* values, byte nBytes)
+### readRTC(uint8_t addr, uint8_t* values, uint8_t nBytes)
 ##### Description
 Read one or more bytes from RTC RAM.
 ##### Syntax
 `myRTC.readRTC(addr, values, nbytes);`
 ##### Parameters
-**addr:** First SRAM address to read *(byte)*. The valid address range is 0x00-0x12 for DS3231, 0x00-0xFF for DS3232. The general-purpose SRAM for the DS3232 begins at address 0x14. Address is not checked for validity by the library.  
-**values:** An array to receive the values read _(*byte)_  
-**nBytes:** Number of bytes to read *(byte)*. Must be between 1 and 32 (Wire library limitation) but is not checked by the library. 
+**addr:** First SRAM address to read *(uint8_t)*. The valid address range is 0x00-0x12 for DS3231, 0x00-0xFF for DS3232. The general-purpose SRAM for the DS3232 begins at address 0x14. Address is not checked for validity by the library.  
+**values:** An array to receive the values read _(*uint8_t)_  
+**nBytes:** Number of bytes to read *(uint8_t)*. Must be between 1 and 32 (Wire library limitation) but is not checked by the library. 
 ##### Returns
-I2C status *(byte)*. Returns zero if successful.
+I2C status *(uint8_t)*. Returns zero if successful.
 ##### Example
 ```c++
 // read the last eight locations of SRAM into buf
-byte buf[8];
+uint8_t buf[8];
 myRTC.sramRead(248, buf, 8);
 ```
 
-### readRTC(byte addr)
+### readRTC(uint8_t addr)
 ##### Description
 Reads a single byte from RTC RAM.
 ##### Syntax
 `myRTC.readRTC(addr);`
 ##### Parameters
-**addr:** SRAM address to read *(byte)*. The valid address range is 0x00-0x12 for DS3231, 0x00-0xFF for DS3232. The general-purpose SRAM for the DS3232 begins at address 0x14. Address is not checked for validity by the library.
+**addr:** SRAM address to read *(uint8_t)*. The valid address range is 0x00-0x12 for DS3231, 0x00-0xFF for DS3232. The general-purpose SRAM for the DS3232 begins at address 0x14. Address is not checked for validity by the library.
 ##### Returns
-Value read from the RTC *(byte)*
+Value read from the RTC *(uint8_t)*
 ##### Example
 ```c++
-byte val;
+uint8_t val;
 val = myRTC.readRTC(3);  //read the value from SRAM location 3
 ```
 
