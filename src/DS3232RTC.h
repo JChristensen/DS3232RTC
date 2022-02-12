@@ -12,6 +12,33 @@
 #include <Arduino.h>
 #include <TimeLib.h>        // https://github.com/PaulStoffregen/Time
 
+// define release-independent I2C functions
+#if defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
+#include <TinyWireM.h>
+#define i2cBegin TinyWireM.begin
+#define i2cBeginTransmission TinyWireM.beginTransmission
+#define i2cEndTransmission TinyWireM.endTransmission
+#define i2cRequestFrom TinyWireM.requestFrom
+#define i2cRead TinyWireM.receive
+#define i2cWrite TinyWireM.send
+#elif ARDUINO >= 100
+#include <Wire.h>
+#define i2cBegin Wire.begin
+#define i2cBeginTransmission Wire.beginTransmission
+#define i2cEndTransmission Wire.endTransmission
+#define i2cRequestFrom Wire.requestFrom
+#define i2cRead Wire.read
+#define i2cWrite Wire.write
+#else
+#include <Wire.h>
+#define i2cBegin Wire.begin
+#define i2cBeginTransmission Wire.beginTransmission
+#define i2cEndTransmission Wire.endTransmission
+#define i2cRequestFrom Wire.requestFrom
+#define i2cRead Wire.receive
+#define i2cWrite Wire.send
+#endif
+
 #ifndef _BV
 #define _BV(bit) (1 << (bit))
 #endif
