@@ -132,6 +132,7 @@ class DS3232RTC
             DS32_DYDT        {6};        // Day/Date flag bit in alarm Day/Date registers
 
         DS3232RTC() {};
+        DS3232RTC(bool initI2C) { (void)initI2C; }  // undocumented for backward compatibility
         void begin();
         static time_t get();    // static needed to work with setSyncProvider() in the Time library
         uint8_t set(time_t t);

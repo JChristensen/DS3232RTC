@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License along with thi
 
 The 2.0.0 version of the library has some significant changes and is not completely backwards compatible with earlier versions. These changes provide a more consistent API and reduce the possibility of name collisions. While sketches using this library will likely require changes as a result, these should be mostly straightforward.
 
- - The library no longer defines a `DS3232RTC` object, therefore each sketch needs to define  one. Previous versions of the library defined a DS3232RTC object named `RTC`, only for AVR architectures. (Consider using a name other than `RTC` as this can cause a name collision on some architectures.)
- - The constructor no longer has the capability to initialize the I2C bus, therefore, the sketch needs to call `DS3232RTC::begin()` in the `setup()` function or elsewhere as appropriate.
+ - The library no longer defines a `DS3232RTC` object, therefore each sketch needs to define  one. (Previous versions of the library defined a DS3232RTC object named `RTC`, although only for AVR architecture. Consider using a name other than `RTC` as this can cause a name collision on some architectures.)
+ - The constructor no longer has the capability to initialize the I2C bus and no longer accepts an optional parameter. Therefore, the sketch needs to call `DS3232RTC::begin()` in the `setup()` function or elsewhere as appropriate.
  - To reduce the possibility of name collisions, the enumerations as well as register addresses, etc. are now defined in the header file within the DS3232RTC class. Therefore, when using any of these names, it will be necessary to include the DS3232RTC scope, e.g. `myRTC.alarm(DS3232RTC::ALARM_1);`
  - Also to reduce collisions, register address names and bit names have been prefixed with `DS32_` (see the header file.)
  - The example sketches and documentation have been updated to reflect these changes.
