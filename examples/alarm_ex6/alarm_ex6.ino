@@ -81,7 +81,7 @@ void setup()
     myRTC.alarmInterrupt(DS3232RTC::ALARM_2, true);
 }
 
-volatile boolean alarmIsrWasCalled = false;
+volatile bool alarmIsrWasCalled = false;
 
 void alarmIsr()
 {
